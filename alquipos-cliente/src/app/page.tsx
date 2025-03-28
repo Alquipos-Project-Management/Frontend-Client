@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/molecules/Navigation/Navbar';
 import HeroCarousel from '@/components/molecules/Carousel/HeroCarousel';
+import BrandSlider from '@/components/molecules/BrandSlider/BrandSlider';
 import Footer from '@/components/organisms/Footer/Footer';
 import { heroSlides } from '@/mock/carouselData';
+import { brands } from '@/mock/brandsData';
 import styles from './page.module.css';
 
 // Datos de prueba para las secciones
@@ -17,12 +19,6 @@ const categories = [
     name: 'Andamios',
     description: 'Andamios certificados para todo tipo de construcción',
     image: '/images/categories/andamios.jpg',
-  },
-  {
-    id: 'encofrados',
-    name: 'Encofrados',
-    description: 'Soluciones de encofrado para hormigón',
-    image: '/images/categories/encofrados.jpg',
   },
   {
     id: 'maquinaria',
@@ -80,6 +76,14 @@ const benefits = [
 export default function Home() {
   // Simular carga de imágenes para el carrusel
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [navbarVisible, setNavbarVisible] = useState(true);
+  
+  // Referencias para animaciones al hacer scroll
+  const categoriesRef = useRef<HTMLElement>(null);
+  const benefitsRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+  const brandsRef = useRef<HTMLElement>(null);
   
   // Efecto para simular la carga de imágenes
   useEffect(() => {
@@ -90,6 +94,48 @@ export default function Home() {
     
     return () => clearTimeout(timer);
   }, []);
+
+  // Control de visibilidad del navbar al hacer scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
+      
+      setPrevScrollPos(currentScrollPos);
+      setNavbarVisible(visible);
+      
+      // Aplicar clase para ocultar/mostrar navbar
+      const navbar = document.querySelector('[class^="Navbar_navbar"]') as HTMLElement;
+      if (navbar) {
+        navbar.classList.toggle('Navbar_navBarHidden', !visible);
+      }
+      
+      // Animar secciones al hacer scroll
+      const sections = [
+        { ref: categoriesRef, className: styles.animateSection },
+        { ref: benefitsRef, className: styles.animateSection },
+        { ref: ctaRef, className: styles.animateSection },
+        { ref: brandsRef, className: styles.animateSection }
+      ];
+      
+      sections.forEach(({ ref, className }) => {
+        if (ref.current) {
+          const rect = ref.current.getBoundingClientRect();
+          const isVisible = rect.top < window.innerHeight * 0.75;
+          
+          if (isVisible) {
+            ref.current.classList.add(className);
+          }
+        }
+      });
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollPos]);
 
   return (
     <>
@@ -109,7 +155,7 @@ export default function Home() {
         </section>
 
         {/* Sección de Categorías */}
-        <section className={styles.categoriesSection}>
+        <section ref={categoriesRef} className={`${styles.categoriesSection} ${styles.sectionToAnimate}`}>
           <div className={styles.sectionContainer}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>Nuestros Equipos</h2>
@@ -144,7 +190,7 @@ export default function Home() {
         </section>
 
         {/* Sección de Beneficios */}
-        <section className={styles.benefitsSection}>
+        <section ref={benefitsRef} className={`${styles.benefitsSection} ${styles.sectionToAnimate}`}>
           <div className={styles.sectionContainer}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>¿Por qué elegirnos?</h2>
@@ -155,7 +201,11 @@ export default function Home() {
             
             <div className={styles.benefitsGrid}>
               {benefits.map((benefit, index) => (
-                <div className={styles.benefitCard} key={index}>
+                <div 
+                  className={`${styles.benefitCard} ${styles.fadeInItem}`} 
+                  key={index}
+                  style={{ animationDelay: `${index * 0.15}s` }}
+                >
                   <div className={styles.benefitIconContainer}>
                     {benefit.icon}
                   </div>
@@ -168,7 +218,7 @@ export default function Home() {
         </section>
 
         {/* Sección de Llamado a la Acción (CTA) */}
-        <section className={styles.ctaSection}>
+        <section ref={ctaRef} className={`${styles.ctaSection} ${styles.sectionToAnimate}`}>
           <div className={styles.ctaContainer}>
             <div className={styles.ctaContent}>
               <h2 className={styles.ctaTitle}>¿Listo para comenzar su proyecto?</h2>
@@ -184,6 +234,20 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Sección de Marcas */}
+        <section ref={brandsRef} className={`${styles.brandsSection} ${styles.sectionToAnimate}`}>
+          <div className={styles.sectionContainer}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Trabajamos con las Mejores Marcas</h2>
+              <p className={styles.sectionSubtitle}>
+                Ofrecemos equipos de las marcas más reconocidas y confiables del mercado
+              </p>
+            </div>
+            
+            <BrandSlider brands={brands} />
           </div>
         </section>
       </main>

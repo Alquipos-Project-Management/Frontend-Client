@@ -12,8 +12,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const { state, logout } = useApp();
-  const { isAuthenticated } = state;
+  const { isAuthenticated, user } = useApp();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -39,6 +38,15 @@ export default function Navbar() {
     };
   }, [scrolled]);
 
+  // Enlaces de navegación personalizados
+  const navLinks = [
+    { path: ROUTES.HOME, label: 'Inicio' },
+    { path: ROUTES.EQUIPMENT, label: 'Equipos' },
+    { path: '/testimonios', label: 'Testimonios' },
+    { path: '/proyectos', label: 'Proyectos' },
+    { path: '/contact', label: 'Contacto' },
+  ];
+
   return (
     <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
@@ -60,7 +68,7 @@ export default function Navbar() {
 
         <div className={`${styles.menu} ${isMenuOpen ? styles.menuOpen : ''}`}>
           <ul className={styles.navLinks}>
-            {NAVIGATION.MAIN.map((item) => (
+            {navLinks.map((item) => (
               <li key={item.path}>
                 <Link 
                   href={item.path}
@@ -71,33 +79,28 @@ export default function Navbar() {
                 </Link>
               </li>
             ))}
-          </ul>
-
-          <div className={styles.authButtons}>
-            {isAuthenticated ? (
-              <>
-                <Link href={ROUTES.DASHBOARD} className={styles.dashboardLink} onClick={() => setIsMenuOpen(false)}>
-                  Panel
-                </Link>
-                <button 
-                  className={styles.logoutButton}
-                  onClick={() => {
-                    logout();
-                    setIsMenuOpen(false);
-                  }}
+            {isAuthenticated && (
+              <li>
+                <Link 
+                  href="/dashboard"
+                  className={`${styles.navLink} ${pathname === '/dashboard' ? styles.active : ''}`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Cerrar Sesión
-                </button>
-              </>
+                  Dashboard
+                </Link>
+              </li>
+            )}
+          </ul>
+          
+          <div className={styles.callToAction}>
+            {isAuthenticated ? (
+              <Link href="/dashboard" className={styles.ctaButton} onClick={() => setIsMenuOpen(false)}>
+                Mi Cuenta
+              </Link>
             ) : (
-              <>
-                <Link href={ROUTES.LOGIN} className={styles.loginLink} onClick={() => setIsMenuOpen(false)}>
-                  Iniciar Sesión
-                </Link>
-                <Link href={ROUTES.REGISTER} className={styles.registerLink} onClick={() => setIsMenuOpen(false)}>
-                  Registrarse
-                </Link>
-              </>
+              <Link href="/contact" className={styles.ctaButton} onClick={() => setIsMenuOpen(false)}>
+                Solicitar Cotización
+              </Link>
             )}
           </div>
         </div>
