@@ -4,10 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import Navbar from '@/components/molecules/Navigation/Navbar';
 import HeroCarousel from '@/components/molecules/Carousel/HeroCarousel';
 import BrandSlider from '@/components/molecules/BrandSlider/BrandSlider';
-import Footer from '@/components/organisms/Footer/Footer';
 import { heroSlides } from '@/mock/carouselData';
 import { brands } from '@/mock/brandsData';
 import styles from './page.module.css';
@@ -138,120 +136,116 @@ export default function Home() {
   }, [prevScrollPos]);
 
   return (
-    <>
-      <Navbar />
-      <main className={styles.main}>
-        {/* Hero Section con Carrusel */}
-        <section className={styles.heroSection}>
-          {imagesLoaded ? (
-            <HeroCarousel slides={heroSlides} />
-          ) : (
-            <div className={styles.carouselPlaceholder}>
-              <div className={styles.placeholderContent}>
-                <span className={styles.loader}></span>
-              </div>
+    <main className={styles.main}>
+      {/* Hero Section con Carrusel */}
+      <section className={styles.heroSection}>
+        {imagesLoaded ? (
+          <HeroCarousel slides={heroSlides} />
+        ) : (
+          <div className={styles.carouselPlaceholder}>
+            <div className={styles.placeholderContent}>
+              <span className={styles.loader}></span>
             </div>
-          )}
-        </section>
+          </div>
+        )}
+      </section>
 
-        {/* Sección de Categorías */}
-        <section ref={categoriesRef} className={`${styles.categoriesSection} ${styles.sectionToAnimate}`}>
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>Nuestros Equipos</h2>
-              <p className={styles.sectionSubtitle}>
-                Contamos con una amplia variedad de equipos para la construcción, todos en excelente estado y listos para alquilar.
-              </p>
-            </div>
-            
-            <div className={styles.categoriesGrid}>
-              {categories.map((category) => (
-                <Link 
-                  href={`/equipment?category=${category.id}`} 
-                  key={category.id}
-                  className={styles.categoryCard}
-                >
-                  <div className={styles.categoryImageContainer}>
-                    <div className={styles.categoryImage}>
-                      {/* En producción, reemplazar con imágenes reales */}
-                      <div className={styles.imagePlaceholder} style={{ backgroundColor: '#f0f0f0' }}>
-                        {category.name[0]}
-                      </div>
+      {/* Sección de Categorías */}
+      <section ref={categoriesRef} className={`${styles.categoriesSection} ${styles.sectionToAnimate}`}>
+        <div className={styles.sectionContainer}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Nuestros Equipos</h2>
+            <p className={styles.sectionSubtitle}>
+              Contamos con una amplia variedad de equipos para la construcción, todos en excelente estado y listos para alquilar.
+            </p>
+          </div>
+          
+          <div className={styles.categoriesGrid}>
+            {categories.map((category) => (
+              <Link 
+                href={`/equipment?category=${category.id}`} 
+                key={category.id}
+                className={styles.categoryCard}
+              >
+                <div className={styles.categoryImageContainer}>
+                  <div className={styles.categoryImage}>
+                    {/* En producción, reemplazar con imágenes reales */}
+                    <div className={styles.imagePlaceholder} style={{ backgroundColor: '#f0f0f0' }}>
+                      {category.name[0]}
                     </div>
                   </div>
-                  <div className={styles.categoryContent}>
-                    <h3 className={styles.categoryTitle}>{category.name}</h3>
-                    <p className={styles.categoryDescription}>{category.description}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Sección de Beneficios */}
-        <section ref={benefitsRef} className={`${styles.benefitsSection} ${styles.sectionToAnimate}`}>
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>¿Por qué elegirnos?</h2>
-              <p className={styles.sectionSubtitle}>
-                En Alquipos ofrecemos soluciones profesionales con equipos de alta calidad y servicio personalizado.
-              </p>
-            </div>
-            
-            <div className={styles.benefitsGrid}>
-              {benefits.map((benefit, index) => (
-                <div 
-                  className={`${styles.benefitCard} ${styles.fadeInItem}`} 
-                  key={index}
-                  style={{ animationDelay: `${index * 0.15}s` }}
-                >
-                  <div className={styles.benefitIconContainer}>
-                    {benefit.icon}
-                  </div>
-                  <h3 className={styles.benefitTitle}>{benefit.title}</h3>
-                  <p className={styles.benefitDescription}>{benefit.description}</p>
                 </div>
-              ))}
-            </div>
+                <div className={styles.categoryContent}>
+                  <h3 className={styles.categoryTitle}>{category.name}</h3>
+                  <p className={styles.categoryDescription}>{category.description}</p>
+                </div>
+              </Link>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Sección de Llamado a la Acción (CTA) */}
-        <section ref={ctaRef} className={`${styles.ctaSection} ${styles.sectionToAnimate}`}>
-          <div className={styles.ctaContainer}>
-            <div className={styles.ctaContent}>
-              <h2 className={styles.ctaTitle}>¿Listo para comenzar su proyecto?</h2>
-              <p className={styles.ctaDescription}>
-                Contáctenos hoy mismo para obtener una cotización personalizada para su proyecto.
-              </p>
-              <div className={styles.ctaButtons}>
-                <Link href="/contact" className={styles.ctaPrimaryButton}>
-                  Solicitar cotización
-                </Link>
-                <Link href="/equipment" className={styles.ctaSecondaryButton}>
-                  Ver equipos
-                </Link>
+      {/* Sección de Beneficios */}
+      <section ref={benefitsRef} className={`${styles.benefitsSection} ${styles.sectionToAnimate}`}>
+        <div className={styles.sectionContainer}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>¿Por qué elegirnos?</h2>
+            <p className={styles.sectionSubtitle}>
+              En Alquipos ofrecemos soluciones profesionales con equipos de alta calidad y servicio personalizado.
+            </p>
+          </div>
+          
+          <div className={styles.benefitsGrid}>
+            {benefits.map((benefit, index) => (
+              <div 
+                className={`${styles.benefitCard} ${styles.fadeInItem}`} 
+                key={index}
+                style={{ animationDelay: `${index * 0.15}s` }}
+              >
+                <div className={styles.benefitIconContainer}>
+                  {benefit.icon}
+                </div>
+                <h3 className={styles.benefitTitle}>{benefit.title}</h3>
+                <p className={styles.benefitDescription}>{benefit.description}</p>
               </div>
-            </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Sección de Marcas */}
-        <section ref={brandsRef} className={`${styles.brandsSection} ${styles.sectionToAnimate}`}>
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>Trabajamos con las Mejores Marcas</h2>
-              <p className={styles.sectionSubtitle}>
-                Ofrecemos equipos de las marcas más reconocidas y confiables del mercado
-              </p>
+      {/* Sección de Llamado a la Acción (CTA) */}
+      <section ref={ctaRef} className={`${styles.ctaSection} ${styles.sectionToAnimate}`}>
+        <div className={styles.ctaContainer}>
+          <div className={styles.ctaContent}>
+            <h2 className={styles.ctaTitle}>¿Listo para comenzar su proyecto?</h2>
+            <p className={styles.ctaDescription}>
+              Contáctenos hoy mismo para obtener una cotización personalizada para su proyecto.
+            </p>
+            <div className={styles.ctaButtons}>
+              <Link href="/contact" className={styles.ctaPrimaryButton}>
+                Solicitar cotización
+              </Link>
+              <Link href="/equipment" className={styles.ctaSecondaryButton}>
+                Ver equipos
+              </Link>
             </div>
-            
-            <BrandSlider brands={brands} />
           </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+        </div>
+      </section>
+
+      {/* Sección de Marcas */}
+      <section ref={brandsRef} className={`${styles.brandsSection} ${styles.sectionToAnimate}`}>
+        <div className={styles.sectionContainer}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Trabajamos con las Mejores Marcas</h2>
+            <p className={styles.sectionSubtitle}>
+              Ofrecemos equipos de las marcas más reconocidas y confiables del mercado
+            </p>
+          </div>
+          
+          <BrandSlider brands={brands} />
+        </div>
+      </section>
+    </main>
   );
 }
