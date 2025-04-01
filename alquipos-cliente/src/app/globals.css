@@ -31,7 +31,12 @@ a:hover {
   color: var(--primary-80);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--text-primary);
   margin-bottom: var(--space-md);
   font-weight: var(--font-weight-bold);
@@ -52,12 +57,6 @@ h3 {
 
 p {
   margin-bottom: var(--space-md);
-}
-
-main {
-  padding: var(--space-lg);
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 /* Utilidades */

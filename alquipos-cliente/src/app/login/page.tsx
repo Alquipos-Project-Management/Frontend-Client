@@ -20,8 +20,12 @@ export default function LoginPage() {
     setError('');
     
     try {
-      await login(email, password);
-      router.push(ROUTES.DASHBOARD);
+      const result = await login(email, password);
+      if (result.success) {
+        router.push(ROUTES.DASHBOARD);
+      } else {
+        setError(result.error || 'Error al iniciar sesión');
+      }
     } catch (error) {
       setError('Error al iniciar sesión. Por favor verifica tus credenciales.');
       console.error(error);

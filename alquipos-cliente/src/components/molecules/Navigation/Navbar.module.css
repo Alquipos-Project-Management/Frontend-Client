@@ -1,0 +1,308 @@
+.navbar {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: transform 0.4s ease, background-color 0.3s, box-shadow 0.3s;
+    transform: translateY(0);
+}
+
+.scrolled {
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navBarHidden {
+    transform: translateY(-100%);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    z-index: 1100;
+    transition: transform 0.3s;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.logoText {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-left: 0.5rem;
+}
+
+.logoText span {
+    color: var(--primary-100);
+}
+
+.menuButton {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1100;
+}
+
+.menuIcon {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #333;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.menuOpen .menuIcon {
+    background-color: transparent;
+}
+
+.menuIcon::before,
+.menuIcon::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background-color: #333;
+    transition: transform 0.3s;
+}
+
+.menuIcon::before {
+    top: -6px;
+}
+
+.menuIcon::after {
+    bottom: -6px;
+}
+
+.menuOpen .menuIcon::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menuOpen .menuIcon::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.navLinks {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1.5rem;
+}
+
+.navLink {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: color 0.3s;
+}
+
+.navLink:hover {
+    color: var(--primary-100);
+}
+
+.navLink.active {
+    color: var(--primary-100);
+}
+
+.navLink.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--primary-100);
+}
+
+.navLink::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-100);
+    transition: width 0.3s ease;
+}
+
+.navLink:hover::before {
+    width: 100%;
+}
+
+.callToAction {
+    display: flex;
+    align-items: center;
+}
+
+.ctaButton {
+    background-color: var(--primary-100);
+    color: #333;
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid var(--primary-100);
+    white-space: nowrap;
+}
+
+.ctaButton:hover {
+    background-color: var(--primary-80);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.authButtons {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.loginLink,
+.registerLink,
+.dashboardLink,
+.logoutButton {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.loginLink {
+    color: #444;
+    border: 1px solid #ddd;
+}
+
+.loginLink:hover {
+    border-color: var(--primary-100);
+    color: var(--primary-100);
+}
+
+.registerLink {
+    background-color: var(--primary-100);
+    color: #333;
+    border: 1px solid var(--primary-100);
+}
+
+.registerLink:hover {
+    background-color: var(--primary-80);
+    border-color: var(--primary-80);
+}
+
+.dashboardLink {
+    color: #444;
+    border: 1px solid #ddd;
+}
+
+.dashboardLink:hover {
+    border-color: var(--primary-100);
+    color: var(--primary-100);
+}
+
+.logoutButton {
+    background-color: #f8f8f8;
+    color: #666;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.logoutButton:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+
+@media (max-width: 768px) {
+    .menuButton {
+        display: block;
+    }
+
+    .menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .menuOpen {
+        transform: translateX(0);
+    }
+
+    .navLinks {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .navLink {
+        font-size: 1.2rem;
+        padding: 0.75rem 0;
+        color: #333;
+    }
+
+    .callToAction {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+
+    .ctaButton {
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .authButtons {
+        flex-direction: column;
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .loginLink,
+    .registerLink,
+    .dashboardLink,
+    .logoutButton {
+        width: 100%;
+        text-align: center;
+        margin: 0.25rem 0;
+    }
+}

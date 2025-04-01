@@ -2,30 +2,64 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NAVIGATION, ROUTES } from '@/constants/routes';
 import { useApp } from '@/context/AppContext';
 import styles from './Navbar.module.css';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const { state, logout } = useApp();
-  const { isAuthenticated } = state;
+  const { isAuthenticated, user } = useApp();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    // Prevenir scroll cuando menú está abierto en mobile.
+    if (document.body) {
+      document.body.style.overflow = !isMenuOpen ? 'hidden' : '';
+    }
   };
 
+  // Detectar scroll para cambiar estilo del navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 20;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
+
+  // Enlaces de navegación personalizados
+  const navLinks = [
+    { path: ROUTES.HOME, label: 'Inicio' },
+    { path: ROUTES.EQUIPMENT, label: 'Equipos' },
+    { path: '/testimonios', label: 'Testimonios' },
+    { path: '/proyectos', label: 'Proyectos' },
+    { path: '/contact', label: 'Contacto' },
+  ];
+
   return (
-    <nav className={styles.navbar}>
+    <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         <Link href={ROUTES.HOME} className={styles.logo}>
-          <span className={styles.logoText}>Alquipos</span>
+          {/* Logo placeholder - reemplazar con imagen real */}
+          <div style={{ width: 40, height: 40, backgroundColor: 'var(--primary-100)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <span style={{ color: '#333', fontWeight: 'bold' }}>A</span>
+          </div>
+          <span className={styles.logoText}>Alqui<span>pos</span></span>
         </Link>
 
         <button 
-          className={styles.menuButton}
+          className={`${styles.menuButton} ${isMenuOpen ? styles.menuOpen : ''}`}
           onClick={toggleMenu}
           aria-label="Toggle menu"
         >
@@ -34,40 +68,39 @@ export default function Navbar() {
 
         <div className={`${styles.menu} ${isMenuOpen ? styles.menuOpen : ''}`}>
           <ul className={styles.navLinks}>
-            {NAVIGATION.MAIN.map((item) => (
+            {navLinks.map((item) => (
               <li key={item.path}>
                 <Link 
                   href={item.path}
                   className={`${styles.navLink} ${pathname === item.path ? styles.active : ''}`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
-          </ul>
-
-          <div className={styles.authButtons}>
-            {isAuthenticated ? (
-              <>
-                <Link href={ROUTES.DASHBOARD} className={styles.dashboardLink}>
-                  Panel
-                </Link>
-                <button 
-                  className={styles.logoutButton}
-                  onClick={() => logout()}
+            {isAuthenticated && (
+              <li>
+                <Link 
+                  href="/dashboard"
+                  className={`${styles.navLink} ${pathname === '/dashboard' ? styles.active : ''}`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Cerrar Sesión
-                </button>
-              </>
+                  Dashboard
+                </Link>
+              </li>
+            )}
+          </ul>
+          
+          <div className={styles.callToAction}>
+            {isAuthenticated ? (
+              <Link href="/dashboard" className={styles.ctaButton} onClick={() => setIsMenuOpen(false)}>
+                Mi Cuenta
+              </Link>
             ) : (
-              <>
-                <Link href={ROUTES.LOGIN} className={styles.loginLink}>
-                  Iniciar Sesión
-                </Link>
-                <Link href={ROUTES.REGISTER} className={styles.registerLink}>
-                  Registrarse
-                </Link>
-              </>
+              <Link href="/contact" className={styles.ctaButton} onClick={() => setIsMenuOpen(false)}>
+                Solicitar Cotización
+              </Link>
             )}
           </div>
         </div>
