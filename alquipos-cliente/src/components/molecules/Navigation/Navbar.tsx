@@ -16,7 +16,7 @@ export default function Navbar() {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    // Prevenir scroll cuando menú está abierto en mobile
+    // Prevenir scroll cuando menú está abierto en mobile.
     if (document.body) {
       document.body.style.overflow = !isMenuOpen ? 'hidden' : '';
     }
