@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import styles from './BrandSlider.module.css';
 
 interface Brand {
@@ -15,6 +16,8 @@ interface BrandSliderProps {
 
 export default function BrandSlider({ brands }: BrandSliderProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  const [errorImages, setErrorImages] = useState<Set<string>>(new Set());
 
   // Duplicar las marcas para crear el efecto infinito
   const duplicatedBrands = [...brands, ...brands];
@@ -39,16 +42,43 @@ export default function BrandSlider({ brands }: BrandSliderProps) {
     };
   }, [brands.length]);
 
+  const handleImageLoad = (brandId: number) => {
+    setLoadedImages(prev => {
+      const newSet = new Set(prev);
+      newSet.add(brandId.toString());
+      return newSet;
+    });
+  };
+
+  const handleImageError = (brandId: number) => {
+    setErrorImages(prev => {
+      const newSet = new Set(prev);
+      newSet.add(brandId.toString());
+      return newSet;
+    });
+  };
+
   return (
     <div className={styles.sliderContainer}>
       <div className={styles.slider} ref={sliderRef}>
         {duplicatedBrands.map((brand, index) => (
           <div key={`${brand.id}-${index}`} className={styles.brandItem}>
-            <img 
-              src={brand.logoUrl} 
-              alt={brand.name} 
-              className={styles.brandLogo}
-            />
+            {!errorImages.has(brand.id.toString()) ? (
+              <Image 
+                src={brand.logoUrl} 
+                alt={brand.name} 
+                className={`${styles.brandLogo} ${loadedImages.has(brand.id.toString()) ? styles.fadeIn : ''}`}
+                width={150}
+                height={60}
+                priority
+                onLoad={() => handleImageLoad(brand.id)}
+                onError={() => handleImageError(brand.id)}
+              />
+            ) : (
+              <div className={styles.brandPlaceholder}>
+                {brand.name}
+              </div>
+            )}
           </div>
         ))}
       </div>

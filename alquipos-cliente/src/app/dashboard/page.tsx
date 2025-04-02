@@ -16,8 +16,7 @@ interface Rental {
 }
 
 export default function DashboardPage() {
-  const { state } = useApp();
-  const { user } = state;
+  const { user } = useApp();
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

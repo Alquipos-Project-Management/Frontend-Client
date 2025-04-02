@@ -1,7 +1,11 @@
+import image6 from '../assets/images/6.jpg';
+import image2 from '../assets/images/2.jpg';
+import image3 from '../assets/images/3.jpg';
+
 export const heroSlides = [
   {
     id: 1,
-    imageUrl: '/images/carousel/andamios-obra.jpg',
+    imageUrl: image6,
     title: 'Andamios profesionales para todo tipo de proyectos',
     subtitle: 'Alquiler de andamios certificados con entrega rápida y asesoría técnica especializada',
     ctaText: 'Ver equipos',
@@ -9,7 +13,7 @@ export const heroSlides = [
   },
   {
     id: 2,
-    imageUrl: '/images/carousel/maquinaria-construccion.jpg',
+    imageUrl: image2,
     title: 'Maquinaria pesada y equipos de construcción',
     subtitle: 'Alquile la mejor maquinaria para su proyecto con servicio técnico incluido',
     ctaText: 'Solicitar cotización',
@@ -17,7 +21,7 @@ export const heroSlides = [
   },
   {
     id: 3,
-    imageUrl: '/images/carousel/herramientas-especializadas.jpg',
+    imageUrl: image3,
     title: 'Herramientas especializadas para profesionales',
     subtitle: 'Amplio catálogo de herramientas para todo tipo de trabajo en construcción',
     ctaText: 'Explorar herramientas',

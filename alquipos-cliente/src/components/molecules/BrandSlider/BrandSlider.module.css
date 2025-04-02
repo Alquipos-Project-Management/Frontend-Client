@@ -38,21 +38,46 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.7;
+  opacity: 1;
   transition: opacity 0.3s, transform 0.3s;
-  filter: grayscale(100%);
+  filter: none;
+  min-width: 150px;
+  min-height: 60px;
 }
 
 .brandItem:hover {
   opacity: 1;
   transform: scale(1.05);
-  filter: grayscale(0%);
+  filter: none;
 }
 
 .brandLogo {
   height: 60px;
+  width: auto;
   max-width: 150px;
   object-fit: contain;
+  display: block;
+  background-color: transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.brandLogo.fadeIn {
+  opacity: 1;
+}
+
+.brandPlaceholder {
+  width: 150px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  padding: 10px;
 }
 
 @keyframes slideAnimation {
@@ -82,6 +107,12 @@
   .brandItem {
     margin: 0 1.5rem;
   }
+
+  .brandPlaceholder {
+    width: 120px;
+    height: 50px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -92,5 +123,11 @@
 
   .brandItem {
     margin: 0 1rem;
+  }
+
+  .brandPlaceholder {
+    width: 100px;
+    height: 40px;
+    font-size: 11px;
   }
 }
