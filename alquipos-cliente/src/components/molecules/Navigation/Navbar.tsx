@@ -44,6 +44,7 @@ export default function Navbar() {
     { path: ROUTES.EQUIPMENT, label: 'Equipos' },
     { path: '/testimonios', label: 'Testimonios' },
     { path: '/proyectos', label: 'Proyectos' },
+    { path: '/noticias', label: 'Noticias' },
     { path: '/contact', label: 'Contacto' },
   ];
 

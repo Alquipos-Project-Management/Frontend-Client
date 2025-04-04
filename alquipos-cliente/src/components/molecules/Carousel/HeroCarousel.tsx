@@ -4,11 +4,12 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './HeroCarousel.module.css';
+import { StaticImageData } from 'next/image';
 
 // Tipos para las slides
 interface Slide {
     id: number;
-    imageUrl: string;
+    imageUrl: string | StaticImageData;
     title: string;
     subtitle: string;
     ctaText: string;
