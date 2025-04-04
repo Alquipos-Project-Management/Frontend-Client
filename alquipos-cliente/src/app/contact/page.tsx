@@ -49,14 +49,14 @@ export default async function Page() {
 
                 <h3 className={styles.infoLabel}>Teléfono</h3>
                 <p className={styles.infoValue}>
-                  <a href={`tel:${info.content.phone}`} className="hover:text-primary-100 transition-colors">
+                  <a href={`tel:${info.content.phone}`} className="text-gray-800 hover:text-gray-600 transition-colors">
                     {info.content.phone}
                   </a>
                 </p>
 
                 <h3 className={styles.infoLabel}>Correo Electrónico</h3>
                 <p className={styles.infoValue}>
-                  <a href={`mailto:${info.content.email}`} className="hover:text-primary-100 transition-colors">
+                  <a href={`mailto:${info.content.email}`} className="text-gray-800 hover:text-gray-600 transition-colors">
                     {info.content.email}
                   </a>
                 </p>

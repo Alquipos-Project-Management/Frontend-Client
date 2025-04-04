@@ -22,13 +22,13 @@ body {
 }
 
 a {
-  color: var(--primary-100);
+  color: #1A1A1A;
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--primary-80);
+  color: #4A4A4A;
 }
 
 h1,

@@ -1,6 +1,6 @@
 .pageWrapper {
   min-height: calc(100vh - 80px);
-  background: var(--background-light);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
   width: 100%;
   position: relative;
   padding-top: 2rem;
@@ -22,7 +22,7 @@
 }
 
 .mainTitle {
-  color: var(--secondary-100);
+  color: #1A1A1A;
   font-size: 2.5rem;
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-md);
@@ -30,6 +30,9 @@
   display: inline-block;
   padding-bottom: 1rem;
   z-index: 1;
+  background: linear-gradient(90deg, #1A1A1A 0%, #333333 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .mainTitle::after {
@@ -40,12 +43,12 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background-color: var(--primary-100);
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
   border-radius: 2px;
 }
 
 .subtitle {
-  color: var(--secondary-80);
+  color: #4A4A4A;
   max-width: 600px;
   margin: var(--space-lg) auto 0;
   font-size: var(--font-size-lg);
@@ -66,15 +69,29 @@
 }
 
 .formSection {
-  background: var(--background-default);
+  background: #FFFFFF;
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   padding: var(--space-xl);
   animation: slideIn var(--transition-normal);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.formSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
 }
 
 .formTitle {
-  color: var(--secondary-100);
+  color: #1A1A1A;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-lg);
@@ -88,36 +105,38 @@
   left: 0;
   width: 60px;
   height: 3px;
-  background-color: var(--primary-100);
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
   border-radius: 2px;
 }
 
 .input, .textarea {
   width: 100%;
   padding: var(--space-md);
-  border: 2px solid var(--secondary-10);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius-md);
-  background-color: var(--background-default);
-  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #1A1A1A;
   transition: all var(--transition-fast);
   font-size: var(--font-size-md);
+  backdrop-filter: blur(5px);
 }
 
 .input:focus, .textarea:focus {
-  border-color: var(--primary-100);
-  box-shadow: 0 0 0 3px var(--primary-10);
+  border-color: #FFD700;
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
   outline: none;
+  background: linear-gradient(to bottom, #FFFFFF 0%, #FAFAFA 100%);
 }
 
 .input::placeholder, .textarea::placeholder {
-  color: var(--text-tertiary);
+  color: #888888;
 }
 
 .submitButton {
   width: 100%;
   padding: var(--space-md) var(--space-lg);
-  background-color: var(--primary-100);
-  color: var(--secondary-100);
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #1A1A1A;
   border: none;
   border-radius: var(--border-radius-md);
   font-weight: var(--font-weight-bold);
@@ -126,11 +145,13 @@
   transition: all var(--transition-fast);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
 }
 
 .submitButton:hover {
-  background-color: var(--primary-80);
+  background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
 }
 
 .submitButton:active {
@@ -138,9 +159,11 @@
 }
 
 .submitButton:disabled {
-  background-color: var(--secondary-40);
+  background-color: #CCCCCC;
+  color: #666666;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .infoSection {
@@ -151,20 +174,34 @@
 }
 
 .infoCard {
-  background: var(--background-default);
+  background: #FFFFFF;
   border-radius: var(--border-radius-lg);
   padding: var(--space-xl);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   transition: all var(--transition-normal);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.infoCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
 }
 
 .infoCard:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
 .infoTitle {
-  color: var(--secondary-100);
+  color: #1A1A1A;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-lg);
@@ -178,19 +215,29 @@
   left: 0;
   width: 40px;
   height: 3px;
-  background-color: var(--primary-100);
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
   border-radius: 2px;
 }
 
 .infoLabel {
-  color: var(--secondary-100);
+  color: #1A1A1A;
   font-weight: var(--font-weight-medium);
   margin-bottom: var(--space-xs);
 }
 
 .infoValue {
-  color: var(--secondary-80);
+  color: #4A4A4A;
   margin-bottom: var(--space-md);
+}
+
+.infoValue a {
+  color: #1A1A1A;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.infoValue a:hover {
+  color: #4A4A4A;
 }
 
 .socialMediaSection {
@@ -209,14 +256,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--background-light);
+  background: #FFFFFF;
   transition: all var(--transition-fast);
   padding: var(--space-xs);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.socialIcon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
 .socialIcon:hover {
   transform: scale(1.15);
-  background: var(--primary-10);
+  border-color: #FFD700;
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.2);
+}
+
+.socialIcon:hover::before {
+  opacity: 1;
 }
 
 @keyframes fadeIn {

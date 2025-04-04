@@ -17,7 +17,7 @@ export const SocialMediaBar = ({ socialLinks }: SocialMediaBarProps) => {
           href={socialLinks.facebook} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center text-[8px] text-yellow-500 hover:text-primary-100"
+          className="flex items-center text-[8px] text-gray-800 hover:text-gray-600"
         >
           <span className="mr-1">👤</span>
           Facebook
@@ -29,7 +29,7 @@ export const SocialMediaBar = ({ socialLinks }: SocialMediaBarProps) => {
           href={socialLinks.instagram} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center text-[8px] text-yellow-500 hover:text-primary-100"
+          className="flex items-center text-[8px] text-gray-800 hover:text-gray-600"
         >
           <span className="mr-1">📷</span>
           Instagram
@@ -41,7 +41,7 @@ export const SocialMediaBar = ({ socialLinks }: SocialMediaBarProps) => {
           href={socialLinks.whatsapp} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center text-[8px] text-yellow-500 hover:text-primary-100"
+          className="flex items-center text-[8px] text-gray-800 hover:text-gray-600"
         >
           <span className="mr-1">📱</span>
           WhatsApp
@@ -53,7 +53,7 @@ export const SocialMediaBar = ({ socialLinks }: SocialMediaBarProps) => {
           href={socialLinks.linkedin} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex items-center text-[8px] text-yellow-500 hover:text-primary-100"
+          className="flex items-center text-[8px] text-gray-800 hover:text-gray-600"
         >
           <span className="mr-1">💼</span>
           LinkedIn
