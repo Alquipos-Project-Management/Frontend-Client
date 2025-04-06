@@ -1,0 +1,228 @@
+.pageWrapper {
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #FFFDF7 0%, #FFF8E1 100%);
+  width: 100%;
+  position: relative;
+  padding-top: 2rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem var(--space-md);
+  animation: fadeIn var(--transition-normal);
+}
+
+.header {
+  text-align: center;
+  margin: 3rem auto var(--space-xxl);
+  padding-top: 2rem;
+  animation: slideDown var(--transition-normal);
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.badge {
+  background: #FFD700;
+  color: #000000;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin: 1rem 0 2rem;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.title {
+  color: #1A1A1A;
+  font-size: 2.5rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  order: -1;
+}
+
+.subtitle {
+  color: #4A4A4A;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: var(--space-xxl);
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .newsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.newsCard {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  height: 450px;
+}
+
+.newsCard.expanded {
+  grid-column: span 2;
+  height: auto;
+  cursor: default;
+}
+
+@media (max-width: 768px) {
+  .newsCard.expanded {
+    grid-column: span 1;
+  }
+}
+
+.newsCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.newsImageContainer {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background: transparent;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.newsImage {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.fallbackImage {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  opacity: 0.8;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.tempImage {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  opacity: 0.8;
+}
+
+.categoryBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.newsContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.newsDate {
+  color: #666666;
+  font-size: 0.9rem;
+}
+
+.newsTitle {
+  color: #1A1A1A;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.newsDescription {
+  color: #4A4A4A;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+.contactSection {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.contactButton {
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  color: #1A1A1A;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.contactButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.newsCard.expanded .newsImageContainer {
+  height: 350px;
+}
+
+.newsCard.expanded .imageWrapper {
+  height: 100%;
+} 
