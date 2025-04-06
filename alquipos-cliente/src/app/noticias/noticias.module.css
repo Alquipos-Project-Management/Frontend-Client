@@ -79,7 +79,7 @@
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  height: 400px;
+  height: 450px;
 }
 
 .newsCard.expanded {
@@ -103,15 +103,34 @@
 .newsImageContainer {
   position: relative;
   width: 100%;
-  height: 200px;
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  height: 250px;
+  background: transparent;
   overflow: hidden;
+  border-radius: 16px 16px 0 0;
 }
 
 .imageWrapper {
   width: 100%;
   height: 100%;
   position: relative;
+  overflow: hidden;
+}
+
+.newsImage {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.fallbackImage {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  opacity: 0.8;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .tempImage {
@@ -198,4 +217,12 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.newsCard.expanded .newsImageContainer {
+  height: 350px;
+}
+
+.newsCard.expanded .imageWrapper {
+  height: 100%;
 } 
