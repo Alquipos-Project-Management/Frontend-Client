@@ -170,7 +170,7 @@ export default function Home() {
                 <div className={styles.categoryImageContainer}>
                   <div className={styles.categoryImage}>
                     {/* En producción, reemplazar con imágenes reales */}
-                    <div className={styles.imagePlaceholder} style={{ backgroundColor: '#f0f0f0' }}>
+                    <div className={styles.imagePlaceholder}>
                       {category.name[0]}
                     </div>
                   </div>

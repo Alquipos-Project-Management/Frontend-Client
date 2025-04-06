@@ -1,28 +1,28 @@
 :root {
   /* Primary colors - CAT yellow */
-  --primary-100: #FFDE00; /* CAT amarillo */
-  --primary-80: #FFE533;
-  --primary-60: #FFEC66;
-  --primary-40: #FFF299;
-  --primary-10: #FFFBE6;
+  --primary-100: #FFCC00; /* Nuevo amarillo principal */
+  --primary-80: #F5BB00; /* Segundo amarillo */
+  /* --primary-60: #FFEC66; /* Comentado o ajustar si es necesario */
+  /* --primary-40: #FFF299; /* Comentado o ajustar si es necesario */
+  /* --primary-10: #FFFBE6; /* Comentado o ajustar si es necesario */
   
-  /* Secondary colors - steel gray */
-  --secondary-100: #333F48; /* Gris oscuro */
-  --secondary-80: #5C666D;
-  --secondary-60: #858D93;
-  --secondary-40: #ADB3B8;
-  --secondary-10: #E8EAEC;
+  /* Secondary/Neutral colors - Grays */
+  --secondary-100: #333333; /* Nuevo gris oscuro */
+  --secondary-80: #555555;
+  --secondary-60: #777777;
+  --secondary-40: #999999;
+  --secondary-10: #BBBBBB;
   
-  /* Text colors */
-  --text-primary: var(--secondary-100);
-  --text-secondary: var(--secondary-80);
-  --text-tertiary: var(--secondary-60);
-  --text-disabled: var(--secondary-40);
+  /* Text colors (Adjusted for dark background) */
+  --text-primary: #FFFFFF; /* Texto blanco principal */
+  --text-secondary: var(--secondary-10); /* Gris claro para texto secundario */
+  --text-tertiary: var(--secondary-40); /* Gris medio */
+  --text-disabled: var(--secondary-60); /* Gris más oscuro para deshabilitado */
   
-  /* Background colors */
-  --background-default: #FFFFFF;
-  --background-light: var(--primary-10);
-  --background-dark: var(--secondary-10);
+  /* Background colors (Adjusted for dark theme) */
+  --background-default: #0A0A0A; /* Fondo negro principal */
+  --background-light: #1A1A1A; /* Negro secundario */
+  --background-dark: var(--secondary-100); /* Gris oscuro como fondo alternativo */
   
   /* Status colors */
   --success: #00A651;
@@ -58,6 +58,7 @@
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
+  --font-weight-black: 900; /* Añadido para títulos más robustos */
   
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -68,4 +69,8 @@
   --transition-fast: 150ms ease;
   --transition-normal: 300ms ease;
   --transition-slow: 500ms ease;
+  
+  /* Texturas (Opcional - Descomentar y ajustar URL/Gradiente si se usa) */
+  /* --texture-concrete: url('/path/to/dark-concrete-texture.png'); */
+  /* --texture-blueprint: linear-gradient(rgba(10,10,10,0.95), rgba(10,10,10,0.95)), url('/path/to/blueprint-grid.svg'); */
 } 
