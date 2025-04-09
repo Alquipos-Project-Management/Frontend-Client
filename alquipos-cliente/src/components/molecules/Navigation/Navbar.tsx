@@ -42,9 +42,8 @@ export default function Navbar() {
 
   const navLinks = [
     { path: ROUTES.HOME, label: 'Inicio' },
-    { path: ROUTES.EQUIPMENT, label: 'Equipos' },
-    { path: '/testimonios', label: 'Testimonios' },
     { path: '/productos', label: 'Productos' },
+    { path: '/testimonios', label: 'Testimonios' },
     { path: '/noticias', label: 'Noticias' },
     { path: '/contact', label: 'Contacto' },
   ];
