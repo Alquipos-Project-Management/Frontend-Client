@@ -1,0 +1,264 @@
+.floatingContactContainer {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Botón principal con icono de constructor */
+.mainButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #FFD700; /* Fondo amarillo */
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: hidden;
+  position: relative;
+  animation: pulseAnimation 2s infinite;
+}
+
+.mainButton:hover, .mainButton.active {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  width: auto;
+  max-width: 220px;
+  padding-right: 20px;
+  border-radius: 30px;
+  background-color: #1a1a1a; /* Fondo negro en hover */
+}
+
+.mainButton:hover .obreroImage,
+.mainButton.active .obreroImage {
+  filter: invert(85%) sepia(34%) saturate(1000%) hue-rotate(359deg) brightness(105%); /* Cambiar a amarillo en hover */
+}
+
+.constructorIcon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0;
+  flex-shrink: 0;
+  transition: margin 0.3s ease;
+}
+
+.obreroImage {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0); /* Hacer la imagen completamente negra */
+  transition: filter 0.3s ease;
+}
+
+.mainButton:hover .constructorIcon,
+.mainButton.active .constructorIcon {
+  margin-right: 8px;
+}
+
+.buttonLabel {
+  max-width: 0;
+  opacity: 0;
+  color: #1a1a1a; /* Color del texto en estado normal */
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: hidden;
+  margin-left: 0;
+}
+
+.mainButton:hover .buttonLabel,
+.mainButton.active .buttonLabel {
+  max-width: 200px;
+  opacity: 1;
+  margin-left: 0;
+  color: #FFD700; /* Color del texto en hover (amarillo) */
+}
+
+/* Ondas alrededor del botón */
+.mainButton::before,
+.mainButton::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #FFD700;
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.mainButton::before {
+  animation: ripple 2s ease-out infinite;
+}
+
+.mainButton::after {
+  animation: ripple 2s 1s ease-out infinite;
+}
+
+.mainButton:hover::before,
+.mainButton:hover::after,
+.mainButton.active::before,
+.mainButton.active::after {
+  animation-play-state: paused;
+  background-color: #1a1a1a;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseAnimation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* Contenedor de opciones de contacto */
+.contactOptions {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.contactOptions.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Estilo para cada opción de contacto */
+.contactOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background-color: var(--background-light);
+  border-radius: 24px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 1px solid var(--secondary-80);
+}
+
+.contactOption svg {
+  width: 24px;
+  height: 24px;
+}
+
+.contactOption span {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.whatsappOption {
+  color: #25D366;
+}
+
+.whatsappOption:hover {
+  background-color: rgba(37, 211, 102, 0.1);
+  transform: translateY(-3px);
+}
+
+.emailOption {
+  color: var(--primary-100);
+}
+
+.emailOption:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Ajustes para pantallas medianas */
+@media (max-width: 768px) {
+  .mainButton {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .mainButton:hover, .mainButton.active {
+    width: auto;
+    padding-right: 15px;
+  }
+  
+  .constructorIcon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .buttonLabel {
+    font-size: 13px;
+  }
+  
+  .contactOption {
+    padding: 6px 12px;
+  }
+  
+  .contactOption svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .contactOption span {
+    font-size: 13px;
+  }
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 480px) {
+  .mainButton {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .mainButton:hover, .mainButton.active {
+    width: auto;
+    padding-right: 10px;
+  }
+  
+  .constructorIcon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .contactOption {
+    padding: 5px 10px;
+  }
+  
+  .contactOption span {
+    font-size: 12px;
+  }
+} 

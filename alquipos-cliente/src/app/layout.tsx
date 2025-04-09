@@ -5,6 +5,7 @@ import "../styles/tokens.css";
 import ClientProviders from "@/components/providers/ClientProviders";
 import Navbar from "@/components/molecules/Navigation/Navbar";
 import Footer from "@/components/organisms/Footer/Footer";
+import { ContactFloatingButton } from "@/components/atoms/ContactFloatingButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,10 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <ContactFloatingButton 
+            phoneNumber="50662345678" 
+            email="contacto@alquipos.com" 
+          />
         </ClientProviders>
       </body>
     </html>
