@@ -17,18 +17,53 @@ const categories = [
     name: 'Andamios',
     description: 'Andamios certificados para todo tipo de construcción',
     image: '/images/categories/andamios.jpg',
+    specs: [
+      { icon: 'altura', text: 'Hasta 30m' },
+      { icon: 'capacidad', text: '300kg/m²' }
+    ],
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={styles.iconoConstructivo}>
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <line x1="3" y1="9" x2="21" y2="9" />
+        <line x1="3" y1="15" x2="21" y2="15" />
+        <line x1="9" y1="3" x2="9" y2="21" />
+        <line x1="15" y1="3" x2="15" y2="21" />
+      </svg>
+    )
   },
   {
     id: 'maquinaria',
     name: 'Maquinaria',
     description: 'Equipos y maquinaria pesada para construcción',
     image: '/images/categories/maquinaria.jpg',
+    specs: [
+      { icon: 'potencia', text: '180-300HP' },
+      { icon: 'peso', text: '20-30t' }
+    ],
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={styles.iconoConstructivo}>
+        <path d="M4 11V4H17L22 9V11"/>
+        <path d="M14 4V9H21.5"/>
+        <rect x="3" y="11" width="17" height="8" rx="1" />
+        <circle cx="7.5" cy="19" r="2.5" />
+        <circle cx="17.5" cy="19" r="2.5" />
+      </svg>
+    )
   },
   {
     id: 'herramientas',
     name: 'Herramientas',
     description: 'Herramientas profesionales para cada trabajo',
     image: '/images/categories/herramientas.jpg',
+    specs: [
+      { icon: 'energia', text: 'Eléctricas' },
+      { icon: 'garantia', text: '12 meses' }
+    ],
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={styles.iconoConstructivo}>
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+      </svg>
+    )
   },
 ];
 
@@ -36,38 +71,57 @@ const benefits = [
   {
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={styles.benefitIcon}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0118 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3l1.5 1.5 3-3.75" />
+        <path d="M3.5 18.5L9.5 12.5L13.5 16.5L22 6.92771" />
+        <path d="M19 7L22 7L22 10" />
+        <rect x="2" y="2" width="20" height="20" rx="2" />
       </svg>
     ),
     title: 'Equipos certificados',
-    description: 'Todos nuestros equipos cumplen con las normativas de seguridad y calidad.'
+    description: 'Todos nuestros equipos cumplen con las normativas de seguridad y calidad.',
+    spec: 'ISO 9001'
   },
   {
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={styles.benefitIcon}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+        <path d="M8 19L5 17V7L8 5L12 7L16 5L19 7V17L16 19L12 17L8 19Z" />
+        <path d="M12 7V17" />
+        <path d="M16 5V19" />
+        <path d="M8 5V19" />
       </svg>
     ),
     title: 'Entrega rápida',
-    description: 'Servicio de entrega en obra en menos de 24 horas en la mayoría de ubicaciones.'
+    description: 'Servicio de entrega en obra en menos de 24 horas en la mayoría de ubicaciones.',
+    spec: '24h'
   },
   {
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={styles.benefitIcon}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8V12L14 14" />
+        <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" />
       </svg>
     ),
     title: 'Asesoría técnica',
-    description: 'Equipo de profesionales para asesorarle en la elección de los equipos adecuados.'
+    description: 'Equipo de profesionales para asesorarle en la elección de los equipos adecuados.',
+    spec: 'Expertos'
   },
   {
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={styles.benefitIcon}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path d="M12 2V5" />
+        <path d="M12 19V22" />
+        <path d="M4.93 4.93L7.05 7.05" />
+        <path d="M16.95 16.95L19.07 19.07" />
+        <path d="M2 12H5" />
+        <path d="M19 12H22" />
+        <path d="M4.93 19.07L7.05 16.95" />
+        <path d="M16.95 7.05L19.07 4.93" />
+        <circle cx="12" cy="12" r="4" />
       </svg>
     ),
     title: 'Precios competitivos',
-    description: 'Ofrecemos las mejores tarifas del mercado con descuentos por volumen o plazo.'
+    description: 'Ofrecemos las mejores tarifas del mercado con descuentos por volumen o plazo.',
+    spec: 'Hasta -20%'
   }
 ];
 
@@ -169,15 +223,25 @@ export default function Home() {
               >
                 <div className={styles.categoryImageContainer}>
                   <div className={styles.categoryImage}>
-                    {/* En producción, reemplazar con imágenes reales */}
-                    <div className={styles.imagePlaceholder}>
-                      {category.name[0]}
-                    </div>
+                    {/* Reemplazar el placeholder con el icono de construcción */}
+                    {category.icon}
                   </div>
                 </div>
                 <div className={styles.categoryContent}>
                   <h3 className={styles.categoryTitle}>{category.name}</h3>
                   <p className={styles.categoryDescription}>{category.description}</p>
+                  {/* Mostrar especificaciones técnicas */}
+                  <div className={styles.specsList}>
+                    {category.specs.map((spec, index) => (
+                      <span key={index} className={styles.specItem}>
+                        <svg className={styles.specIcon} viewBox="0 0 24 24" width="12" height="12">
+                          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" />
+                          <path d="M7 13l3 3 7-7" stroke="currentColor" fill="none" />
+                        </svg>
+                        {spec.text}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </Link>
             ))}
@@ -201,6 +265,8 @@ export default function Home() {
                 className={`${styles.benefitCard} ${styles.fadeInItem}`} 
                 key={index}
                 style={{ animationDelay: `${index * 0.15}s` }}
+                /* Añadir atributo para mostrar especificación técnica */
+                data-spec={benefit.spec}
               >
                 <div className={styles.benefitIconContainer}>
                   {benefit.icon}
@@ -237,7 +303,7 @@ export default function Home() {
       <section ref={brandsRef} className={`${styles.brandsSection} ${styles.sectionToAnimate}`}>
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Trabajamos con las Mejores Marcas</h2>
+            <h2 className={styles.sectionTitle}>Trabajamos con las <span>Mejores Marcas</span></h2>
             <p className={styles.sectionSubtitle}>
               Ofrecemos equipos de las marcas más reconocidas y confiables del mercado
             </p>

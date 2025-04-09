@@ -1,7 +1,7 @@
 .sliderContainer {
   width: 100%;
   overflow: hidden;
-  background-color: white;
+  background-color: #1E1E1E; /* Gris más claro que el fondo principal pero más oscuro que --background-light */
   padding: 3rem 0;
   position: relative;
 }
@@ -19,12 +19,12 @@
 
 .sliderContainer::before {
   left: 0;
-  background: linear-gradient(to right, white, rgba(255, 255, 255, 0));
+  background: linear-gradient(to right, #1E1E1E, rgba(30, 30, 30, 0));
 }
 
 .sliderContainer::after {
   right: 0;
-  background: linear-gradient(to left, white, rgba(255, 255, 255, 0));
+  background: linear-gradient(to left, #1E1E1E, rgba(30, 30, 30, 0));
 }
 
 .slider {

@@ -1,10 +1,5 @@
 .navbar {
-    background: repeating-linear-gradient(45deg,
-            var(--primary-100),
-            var(--primary-100) 15px,
-            #0A0A0A 15px,
-            #0A0A0A 30px
-        );
+    background-color: #0A0A0A; /* Fondo negro sólido */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
@@ -13,19 +8,55 @@
     z-index: 1000;
     transition: transform 0.4s ease, box-shadow 0.3s;
     transform: translateY(0);
-    overflow: hidden;
+    /* overflow: hidden; */ /* Ya no es necesario */
+    /* Añadir bordes con patrón */
+    border-top: 10px solid transparent; /* Espacio para el pseudo-elemento top */
+    border-bottom: 8px solid transparent; /* Espacio para el pseudo-elemento bottom */
+    padding-top: 0; /* Ajustar padding si es necesario */
 }
 
+/* Quitar el overlay oscuro que ya no es necesario */
 .navbar::before {
+    display: none;
+}
+
+/* Crear franja superior con patrón */
+.navbar::after {
     content: '';
     position: absolute;
-    top: 0;
+    top: -10px; /* Alinear con el borde superior */
     left: 0;
     right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 1;
-    transition: background-color 0.3s;
+    height: 10px; /* Altura de la franja superior */
+    background: repeating-linear-gradient(
+        45deg,
+        var(--primary-100),
+        var(--primary-100) 15px,
+        #0A0A0A 15px,
+        #0A0A0A 30px
+    );
+    z-index: 2;
+}
+
+/* Crear franja inferior con patrón */
+.navbar::before {
+    display: block !important; /* Asegurar que se muestre */
+    content: '';
+    position: absolute;
+    bottom: -8px; /* Alinear con el borde inferior */
+    left: 0;
+    right: 0;
+    height: 8px; /* Altura de la franja inferior */
+    background: repeating-linear-gradient(
+        45deg,
+        var(--primary-100),
+        var(--primary-100) 15px,
+        #0A0A0A 15px,
+        #0A0A0A 30px
+    );
+    z-index: 2;
+    background-color: transparent; /* Anular cualquier color anterior */
+    transition: none;
 }
 
 .container {
@@ -45,18 +76,22 @@
     align-items: center;
     z-index: 1100;
     transition: transform 0.3s;
+    padding: 4px 12px;
+    background-color: var(--primary-100);
+    border-radius: var(--border-radius-md);
 }
 
 .logo img {
     display: block;
     height: 60px;
     width: auto;
-    filter: brightness(0) invert(1);
+    filter: none;
     transition: filter 0.3s ease;
 }
 
 .logo:hover {
     transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
 }
 
 .logoText {
@@ -143,28 +178,36 @@
     gap: 1.5rem;
 }
 
+/* Botones de navegación normales */
 .navLink {
     text-decoration: none;
     color: var(--text-primary);
     font-weight: 500;
     position: relative;
-    transition: color 0.3s, background-color 0.3s;
-    background-color: rgba(30, 30, 30, 0.9);
-    padding: 4px 10px;
-    border-radius: var(--border-radius-sm);
+    transition: color 0.3s, border-bottom 0.3s;
+    /* Quitar el fondo de "placa" */
+    background-color: transparent;
+    padding: 8px 2px;
     margin: 0 2px;
     display: inline-block;
+    /* Agregar un borde inferior transparente para evitar saltos en hover */
+    border-bottom: 2px solid transparent;
 }
 
 .navLink:hover {
     color: var(--primary-100);
-    background-color: rgba(10, 10, 10, 0.85);
+    /* Sustituir el fondo por un borde inferior */
+    border-bottom: 2px solid var(--primary-100);
 }
 
+/* Solo el botón activo tendrá fondo amarillo */
 .navLink.active {
     color: #0A0A0A;
     font-weight: bold;
     background-color: var(--primary-100);
+    border-radius: var(--border-radius-sm);
+    padding: 8px 12px;
+    border-bottom: none;
 }
 
 .callToAction {
@@ -172,27 +215,29 @@
     align-items: center;
 }
 
+/* Botón de cotización */
 .ctaButton {
-    /* background-color: var(--primary-100); // Fondo sólido simple */
-    background: linear-gradient(to bottom, hsl(51, 100%, 55%), var(--primary-100)); /* Gradiente sutil para volumen */
-    color: #0A0A0A;
+    /* Quitar el gradiente */
+    background: transparent;
+    color: var(--text-primary);
     font-weight: 600;
-    padding: 0.5rem 1.25rem;
+    padding: 0.6rem 1.5rem;
     border-radius: var(--border-radius-sm);
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid var(--primary-80); /* Borde ligeramente más oscuro */
+    /* Agregar borde amarillo */
+    border: 2px solid var(--primary-100);
     white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    /* Sombra sutil */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .ctaButton:hover {
-    /* background-color: var(--primary-80); */
-    background: linear-gradient(to bottom, var(--primary-100), var(--primary-80)); /* Invertir gradiente en hover */
-    border-color: var(--primary-80);
-    color: #000000;
-    transform: translateY(-3px); /* Levantar un poco más */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+    /* Invertir colores en hover */
+    background-color: var(--primary-100);
+    color: #0A0A0A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 }
 
 .authButtons {
