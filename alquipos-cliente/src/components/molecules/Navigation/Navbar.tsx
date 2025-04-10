@@ -7,6 +7,8 @@ import { NAVIGATION, ROUTES } from '@/constants/routes';
 import { useApp } from '@/context/AppContext';
 import styles from './Navbar.module.css';
 import Image from 'next/image';
+// Importar la imagen directamente como un módulo
+import alquiposLogo from '@/assets/images/logo_transparent.png';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,12 +40,10 @@ export default function Navbar() {
     };
   }, [scrolled]);
 
-  // Enlaces de navegación personalizados
   const navLinks = [
     { path: ROUTES.HOME, label: 'Inicio' },
-    { path: ROUTES.EQUIPMENT, label: 'Equipos' },
+    { path: '/productos', label: 'Productos' },
     { path: '/testimonios', label: 'Testimonios' },
-    { path: '/proyectos', label: 'Proyectos' },
     { path: '/noticias', label: 'Noticias' },
     { path: '/contact', label: 'Contacto' },
   ];
@@ -52,11 +52,13 @@ export default function Navbar() {
     <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         <Link href={ROUTES.HOME} className={styles.logo}>
-          {/* Logo placeholder - reemplazar con imagen real */}
-          <div style={{ width: 40, height: 40, backgroundColor: 'var(--primary-100)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <span style={{ color: '#333', fontWeight: 'bold' }}>A</span>
-          </div>
-          <span className={styles.logoText}>Alqui<span>pos</span></span>
+          <Image
+            src={alquiposLogo} 
+            alt="Alquipos Logo"
+            width={300}
+            height={60}
+            priority
+          />
         </Link>
 
         <button 

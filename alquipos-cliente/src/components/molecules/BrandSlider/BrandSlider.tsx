@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import styles from './BrandSlider.module.css';
+import pageStyles from '@/app/page.module.css';
 
 interface Brand {
   id: number;
@@ -67,7 +68,7 @@ export default function BrandSlider({ brands }: BrandSliderProps) {
               <Image 
                 src={brand.logoUrl} 
                 alt={brand.name} 
-                className={`${styles.brandLogo} ${loadedImages.has(brand.id.toString()) ? styles.fadeIn : ''}`}
+                className={`${styles.brandLogo} ${pageStyles.brandLogo} ${loadedImages.has(brand.id.toString()) ? styles.fadeIn : ''}`}
                 width={150}
                 height={60}
                 priority

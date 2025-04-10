@@ -1,24 +1,62 @@
 .navbar {
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background-color: #0A0A0A; /* Fondo negro sólido */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    transition: transform 0.4s ease, background-color 0.3s, box-shadow 0.3s;
+    transition: transform 0.4s ease, box-shadow 0.3s;
     transform: translateY(0);
+    /* overflow: hidden; */ /* Ya no es necesario */
+    /* Añadir bordes con patrón */
+    border-top: 10px solid transparent; /* Espacio para el pseudo-elemento top */
+    border-bottom: 8px solid transparent; /* Espacio para el pseudo-elemento bottom */
+    padding-top: 0; /* Ajustar padding si es necesario */
 }
 
-.scrolled {
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* Quitar el overlay oscuro que ya no es necesario */
+.navbar::before {
+    display: none;
 }
 
-.navBarHidden {
-    transform: translateY(-100%);
+/* Crear franja superior con patrón */
+.navbar::after {
+    content: '';
+    position: absolute;
+    top: -10px; /* Alinear con el borde superior */
+    left: 0;
+    right: 0;
+    height: 10px; /* Altura de la franja superior */
+    background: repeating-linear-gradient(
+        45deg,
+        var(--primary-100),
+        var(--primary-100) 15px,
+        #0A0A0A 15px,
+        #0A0A0A 30px
+    );
+    z-index: 2;
+}
+
+/* Crear franja inferior con patrón */
+.navbar::before {
+    display: block !important; /* Asegurar que se muestre */
+    content: '';
+    position: absolute;
+    bottom: -8px; /* Alinear con el borde inferior */
+    left: 0;
+    right: 0;
+    height: 8px; /* Altura de la franja inferior */
+    background: repeating-linear-gradient(
+        45deg,
+        var(--primary-100),
+        var(--primary-100) 15px,
+        #0A0A0A 15px,
+        #0A0A0A 30px
+    );
+    z-index: 2;
+    background-color: transparent; /* Anular cualquier color anterior */
+    transition: none;
 }
 
 .container {
@@ -28,6 +66,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    z-index: 2;
 }
 
 .logo {
@@ -36,21 +76,40 @@
     align-items: center;
     z-index: 1100;
     transition: transform 0.3s;
+    padding: 4px 12px;
+    background-color: var(--primary-100);
+    border-radius: var(--border-radius-md);
+}
+
+.logo img {
+    display: block;
+    height: 60px;
+    width: auto;
+    filter: none;
+    transition: filter 0.3s ease;
 }
 
 .logo:hover {
     transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
 }
 
 .logoText {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #333;
+    color: var(--text-primary);
     margin-left: 0.5rem;
+    background-color: rgba(10, 10, 10, 0.75);
+    padding: 2px 8px;
+    border-radius: var(--border-radius-sm);
+    display: inline-block;
 }
 
 .logoText span {
     color: var(--primary-100);
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
 }
 
 .menuButton {
@@ -66,9 +125,10 @@
     display: block;
     width: 24px;
     height: 2px;
-    background-color: #333;
+    background-color: var(--text-primary);
     position: relative;
     transition: background-color 0.3s;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .menuOpen .menuIcon {
@@ -81,8 +141,9 @@
     position: absolute;
     width: 24px;
     height: 2px;
-    background-color: #333;
+    background-color: var(--text-primary);
     transition: transform 0.3s;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .menuIcon::before {
@@ -117,46 +178,36 @@
     gap: 1.5rem;
 }
 
+/* Botones de navegación normales */
 .navLink {
     text-decoration: none;
-    color: #444;
+    color: var(--text-primary);
     font-weight: 500;
     position: relative;
-    padding: 0.5rem 0;
-    transition: color 0.3s;
+    transition: color 0.3s, border-bottom 0.3s;
+    /* Quitar el fondo de "placa" */
+    background-color: transparent;
+    padding: 8px 2px;
+    margin: 0 2px;
+    display: inline-block;
+    /* Agregar un borde inferior transparente para evitar saltos en hover */
+    border-bottom: 2px solid transparent;
 }
 
 .navLink:hover {
     color: var(--primary-100);
+    /* Sustituir el fondo por un borde inferior */
+    border-bottom: 2px solid var(--primary-100);
 }
 
+/* Solo el botón activo tendrá fondo amarillo */
 .navLink.active {
-    color: var(--primary-100);
-}
-
-.navLink.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
+    color: #0A0A0A;
+    font-weight: bold;
     background-color: var(--primary-100);
-}
-
-.navLink::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary-100);
-    transition: width 0.3s ease;
-}
-
-.navLink:hover::before {
-    width: 100%;
+    border-radius: var(--border-radius-sm);
+    padding: 8px 12px;
+    border-bottom: none;
 }
 
 .callToAction {
@@ -164,22 +215,29 @@
     align-items: center;
 }
 
+/* Botón de cotización */
 .ctaButton {
-    background-color: var(--primary-100);
-    color: #333;
+    /* Quitar el gradiente */
+    background: transparent;
+    color: var(--text-primary);
     font-weight: 600;
-    padding: 0.5rem 1.25rem;
-    border-radius: 4px;
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--border-radius-sm);
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid var(--primary-100);
+    /* Agregar borde amarillo */
+    border: 2px solid var(--primary-100);
     white-space: nowrap;
+    /* Sombra sutil */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .ctaButton:hover {
-    background-color: var(--primary-80);
+    /* Invertir colores en hover */
+    background-color: var(--primary-100);
+    color: #0A0A0A;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 }
 
 .authButtons {
@@ -192,54 +250,28 @@
 .registerLink,
 .dashboardLink,
 .logoutButton {
+    color: var(--text-primary); /* Cambiar a blanco para mejor contraste inicial */
+    border: 1px solid var(--secondary-40); /* Borde un poco más claro */
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s;
+    background-color: rgba(30, 30, 30, 0.9); /* Más opaco */
+    /* Añadir sombra sutil para separar */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 
-.loginLink {
-    color: #444;
-    border: 1px solid #ddd;
-}
-
-.loginLink:hover {
-    border-color: var(--primary-100);
-    color: var(--primary-100);
-}
-
-.registerLink {
-    background-color: var(--primary-100);
-    color: #333;
-    border: 1px solid var(--primary-100);
-}
-
-.registerLink:hover {
-    background-color: var(--primary-80);
-    border-color: var(--primary-80);
-}
-
-.dashboardLink {
-    color: #444;
-    border: 1px solid #ddd;
-}
-
-.dashboardLink:hover {
-    border-color: var(--primary-100);
-    color: var(--primary-100);
-}
-
-.logoutButton {
-    background-color: #f8f8f8;
-    color: #666;
-    border: 1px solid #ddd;
-    cursor: pointer;
-}
-
+.loginLink:hover,
+.dashboardLink:hover,
+.registerLink:hover,
 .logoutButton:hover {
-    border-color: #ff6b6b;
-    color: #ff6b6b;
+    /* background-color: rgba(26, 26, 26, 0.9); // Negro casi sólido anterior */
+    background-color: var(--secondary-100); /* Gris oscuro sólido */
+    border-color: var(--primary-100);
+    color: var(--primary-100);
+    transform: translateY(-2px); /* Añadir pequeño levantamiento */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Sombra más pronunciada en hover */
 }
 
 @media (max-width: 768px) {
@@ -253,7 +285,8 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: white;
+        background-color: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(5px);
         flex-direction: column;
         justify-content: center;
         padding: 2rem;
@@ -275,8 +308,21 @@
 
     .navLink {
         font-size: 1.2rem;
-        padding: 0.75rem 0;
-        color: #333;
+        padding: 6px 12px;
+        color: var(--text-primary);
+        background-color: rgba(50, 50, 50, 0.8);
+        margin: 5px 0;
+        width: 80%;
+        text-align: center;
+    }
+
+    .navLink:hover {
+        background-color: rgba(80, 80, 80, 0.9);
+    }
+
+    .navLink.active {
+        background-color: var(--primary-100);
+        color: #0A0A0A;
     }
 
     .callToAction {

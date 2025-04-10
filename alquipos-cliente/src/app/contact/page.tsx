@@ -22,7 +22,12 @@ export default async function Page() {
       <div className={styles.contactContainer}>
         <div className={styles.headerSection}>
           <h1 className={styles.mainTitle}>
-            {header.content.title}
+            {header.content.title ? 
+              <>
+                {header.content.title.split(' ').slice(0, -2).join(' ')} <span>{header.content.title.split(' ').slice(-2).join(' ')}</span>
+              </> : 
+              'Contacto'
+            }
           </h1>
           <p className={styles.subtitle}>
             {header.content.subtitle}

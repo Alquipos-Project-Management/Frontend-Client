@@ -51,7 +51,7 @@ export default function NoticiasPage() {
     <div className={styles.pageWrapper}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Noticias y Novedades</h1>
+          <h1 className={styles.title}>Noticias y <span>Novedades</span></h1>
           <span className={styles.badge}>Últimas Actualizaciones</span>
           <p className={styles.subtitle}>
             Mantente informado sobre nuestros nuevos equipos, proyectos exitosos y logros más recientes

@@ -3,8 +3,8 @@
   --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
   --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
 
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
+  --button-primary-hover: var(--primary-80);
+  --button-secondary-hover: var(--secondary-100);
 
   display: grid;
   grid-template-rows: 20px 1fr 20px;
@@ -22,8 +22,8 @@
     --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
     --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
 
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
+    --button-primary-hover: var(--primary-80);
+    --button-secondary-hover: var(--secondary-100);
   }
 }
 
@@ -31,6 +31,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-top: 75px;
 }
 
 .main ol {
@@ -49,7 +50,8 @@
 
 .main code {
   font-family: inherit;
-  background: var(--gray-alpha-100);
+  background: var(--secondary-100);
+  color: var(--text-secondary);
   padding: 2px 4px;
   border-radius: 4px;
   font-weight: 600;
@@ -81,13 +83,16 @@
 }
 
 a.primary {
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--primary-100);
+  color: #0A0A0A;
+  border: 1px solid var(--primary-100);
   gap: 8px;
 }
 
 a.secondary {
-  border-color: var(--gray-alpha-200);
+  border: 1px solid var(--secondary-80);
+  background: transparent;
+  color: var(--text-primary);
   min-width: 158px;
 }
 
@@ -110,18 +115,19 @@ a.secondary {
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
+    background: var(--primary-80);
+    border-color: var(--primary-80);
+    color: #000000;
   }
 
   a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
+    background: var(--secondary-100);
+    border-color: var(--secondary-100);
+    color: var(--primary-100);
   }
 
   .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    color: var(--primary-100);
   }
 }
 
@@ -161,22 +167,24 @@ a.secondary {
 }
 
 @media (prefers-color-scheme: dark) {
-  .logo {
+  /* Ya no necesitamos invertir el logo si lo ajustamos manualmente */
+  /* .logo {
     filter: invert();
-  }
+  } */
 }
 
 /* Hero section */
 .heroSection {
   width: 100%;
   position: relative;
+  padding-top: 20px;
 }
 
 .carouselPlaceholder {
   width: 100%;
   height: 100vh;
   min-height: 500px;
-  background-color: #f5f5f5;
+  background-color: var(--background-light);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -184,12 +192,13 @@ a.secondary {
 
 .placeholderContent {
   text-align: center;
+  color: var(--text-primary);
 }
 
 .loader {
   width: 48px;
   height: 48px;
-  border: 4px solid #ccc;
+  border: 4px solid var(--secondary-80);
   border-top-color: var(--primary-100);
   border-radius: 50%;
   display: inline-block;
@@ -209,8 +218,12 @@ a.secondary {
 /* Sección de categorías */
 .categoriesSection {
   padding: 5rem 0;
-  background-color: #fff;
+  background-color: var(--background-default);
   z-index: 10;
+  /* Añadir textura sutil (descomentar y elegir una) */
+  /* background-image: var(--texture-concrete); */
+  /* background-blend-mode: multiply; */
+  /* background-size: cover; */
 }
 
 .sectionContainer {
@@ -227,27 +240,30 @@ a.secondary {
 
 .sectionTitle {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #333;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
   position: relative;
   display: inline-block;
-  padding-bottom: 0.5rem;
 }
 
-.sectionTitle::after {
+.sectionTitle span {
+  position: relative;
+}
+
+.sectionTitle span::after {
   content: '';
   position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 60px;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
   height: 3px;
-  background-color: var(--primary-100);
+  background-color: #FFDE59;
 }
 
 .sectionSubtitle {
   font-size: 1.1rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -258,28 +274,83 @@ a.secondary {
 }
 
 .categoryCard {
-  background-color: white;
+  background-color: var(--background-light);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
-  color: inherit;
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
+  border: 1px solid var(--secondary-80);
+}
+
+/* Detalle técnico: Marca de medición en la esquina superior derecha */
+.categoryCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: 
+    linear-gradient(45deg, transparent 49.5%, var(--primary-100) 49.5%, var(--primary-100) 50.5%, transparent 50.5%),
+    linear-gradient(-45deg, transparent 49.5%, var(--primary-100) 49.5%, var(--primary-100) 50.5%, transparent 50.5%);
+  opacity: 0.7;
+  z-index: 10;
+}
+
+/* Detalle técnico: Marca de medición en la esquina inferior izquierda */
+.categoryCard::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 15px;
+  background: 
+    repeating-linear-gradient(90deg, 
+      var(--primary-100), 
+      var(--primary-100) 5px, 
+      transparent 5px, 
+      transparent 10px);
+  z-index: 10;
 }
 
 .categoryCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .categoryImageContainer {
   padding-top: 66.67%;
   position: relative;
   overflow: hidden;
-  background-color: #f5f5f5;
+  background-color: var(--secondary-100);
+}
+
+/* Estilos para los iconos constructivos */
+.iconoConstructivo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  color: var(--primary-100);
+  z-index: 5;
+}
+
+/* Transición para la imagen */
+.categoryImageContainer > div {
+  transition: transform 0.4s ease;
+}
+
+.categoryCard:hover .categoryImageContainer > div {
+  transform: scale(1.08);
 }
 
 .categoryImage {
@@ -301,7 +372,8 @@ a.secondary {
   justify-content: center;
   font-size: 3rem;
   font-weight: bold;
-  color: #333;
+  color: var(--text-secondary);
+  background-color: var(--secondary-100);
 }
 
 .categoryContent {
@@ -309,24 +381,74 @@ a.secondary {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
+  border-top: 1px dashed var(--secondary-80);
 }
 
 .categoryTitle {
   font-size: 1.5rem;
   margin-bottom: 0.75rem;
-  color: #333;
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold); /* Título de tarjeta en negrita */
 }
 
 .categoryDescription {
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 0;
   line-height: 1.5;
+}
+
+/* Especificaciones técnicas */
+.specsList {
+  display: flex;
+  margin-top: 0.75rem;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.specItem {
+  display: flex;
+  align-items: center;
+  background-color: rgba(51, 51, 51, 0.4);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.specIcon {
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+  color: var(--primary-100);
 }
 
 /* Sección de beneficios */
 .benefitsSection {
   padding: 5rem 0;
-  background-color: #f9f9f9;
+  background-color: var(--background-default);
+  /* Patrón de fondo tipo malla/rejilla de construcción */
+  background-image: 
+    linear-gradient(rgba(30, 30, 30, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 30, 30, 0.4) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center center;
+  position: relative;
+}
+
+/* Detalle de plano técnico en el título de la sección */
+.benefitsSection .sectionTitle::before {
+  content: "";
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  background-color: var(--primary-100);
+}
+
+.benefitsSection .sectionTitle::after {
+  width: 50px;
 }
 
 .benefitsGrid {
@@ -336,66 +458,146 @@ a.secondary {
 }
 
 .benefitCard {
-  background-color: white;
+  background-color: var(--background-light);
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   text-align: center;
+  color: var(--text-primary);
+  border: 1px solid var(--secondary-100);
+  position: relative;
+  /* Borde punteado para simular línea de corte de plano */
+  border: 2px dashed var(--secondary-80);
+  /* Líneas de "doblez" en las esquinas */
+  background-image: 
+    linear-gradient(45deg, var(--secondary-80) 5px, transparent 5px),
+    linear-gradient(-45deg, var(--secondary-80) 5px, transparent 5px),
+    linear-gradient(135deg, var(--secondary-80) 5px, transparent 5px),
+    linear-gradient(-135deg, var(--secondary-80) 5px, transparent 5px);
+  background-position: top left, top right, bottom right, bottom left;
+  background-repeat: no-repeat;
+  background-size: 15px 15px, 15px 15px, 15px 15px, 15px 15px;
+}
+
+/* Añadir marca de plano técnico */
+.benefitCard::before {
+  content: attr(data-spec); /* Permitirá personalizar desde el HTML */
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: var(--primary-100);
+  color: #0A0A0A;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 .benefitCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  border-color: var(--primary-100);
 }
 
 .benefitIconContainer {
-  width: 70px;
-  height: 70px;
-  background-color: var(--primary-10);
-  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  background-color: var(--secondary-100);
+  border-radius: 12px; /* Forma cuadrada con esquinas redondeadas para aspecto más técnico */
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
+  /* Añadir borde amarillo y rotación para aspecto de diamante */
+  border: 2px solid var(--primary-100);
+  transform: rotate(45deg);
+  overflow: hidden;
 }
 
 .benefitIcon {
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
   color: var(--primary-100);
+  /* Contrarrestar la rotación del contenedor */
+  transform: rotate(-45deg);
 }
 
 .benefitTitle {
   font-size: 1.25rem;
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  /* Añadir un pequeño detalle técnico */
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.benefitTitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 2px;
+  background-color: var(--primary-100);
 }
 
 .benefitDescription {
-  color: #666;
-  line-height: 1.5;
+  color: var(--text-secondary);
+  line-height: 1.6;
   margin: 0;
 }
 
 /* Sección CTA */
 .ctaSection {
-  padding: 5rem 0;
-  background-color: #333;
-  color: white;
+  padding: 6rem 0;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
   position: relative;
   overflow: hidden;
+  /* Añadir grid en el fondo como plano */
+  background-image:
+    linear-gradient(to right, rgba(30, 30, 30, 0.9), rgba(0, 0, 0, 0.9)),
+    linear-gradient(rgba(25, 25, 25, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 25, 25, 0.5) 1px, transparent 1px);
+  background-size: 
+    100% 100%,
+    20px 20px,
+    20px 20px;
+  background-position: center center;
 }
 
+/* Detalles técnicos de construcción en esquinas */
 .ctaSection::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
-  z-index: 1;
+  width: 50px;
+  height: 50px;
+  background: 
+    linear-gradient(to right, var(--primary-100) 2px, transparent 2px) 0 0,
+    linear-gradient(to bottom, var(--primary-100) 2px, transparent 2px) 0 0;
+  background-size: 100% 20px, 20px 100%;
+  background-repeat: no-repeat;
+}
+
+.ctaSection::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  background: 
+    linear-gradient(to left, var(--primary-100) 2px, transparent 2px) 100% 0,
+    linear-gradient(to top, var(--primary-100) 2px, transparent 2px) 0 100%;
+  background-size: 100% 20px, 20px 100%;
+  background-repeat: no-repeat;
 }
 
 .ctaContainer {
@@ -410,19 +612,83 @@ a.secondary {
   max-width: 700px;
   margin: 0 auto;
   text-align: center;
+  position: relative;
+}
+
+/* Línea de timeline minimalista */
+.ctaContent::before {
+  content: "";
+  position: absolute;
+  left: -100px;
+  top: 30px;
+  bottom: 30px;
+  width: 3px;
+  background-color: var(--primary-100);
+  display: none; /* Oculto por defecto, visible en pantallas grandes */
+}
+
+/* Marcadores de timeline */
+.ctaContent::after {
+  content: "";
+  position: absolute;
+  left: -106px;
+  top: 30px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--primary-100);
+  box-shadow: 0 60px 0 var(--primary-100), 0 120px 0 var(--primary-100);
+  display: none; /* Oculto por defecto, visible en pantallas grandes */
+}
+
+/* Mostrar timeline en pantallas grandes */
+@media (min-width: 1200px) {
+  .ctaContent::before,
+  .ctaContent::after {
+    display: block;
+  }
 }
 
 .ctaTitle {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   margin-bottom: 1.5rem;
-  font-weight: 700;
-  color: white;
+  font-weight: var(--font-weight-black);
+  color: var(--text-primary);
+  line-height: 1.2;
+  /* Añadir un detalle gráfico de regla técnica */
+  padding-bottom: 15px;
+  position: relative;
+}
+
+/* Regla técnica bajo el título */
+.ctaTitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 5px;
+  background: linear-gradient(to right, 
+    transparent, 
+    transparent 5px, 
+    var(--primary-100) 5px, 
+    var(--primary-100) 10px, 
+    transparent 10px, 
+    transparent 15px,
+    var(--primary-100) 15px, 
+    var(--primary-100) 85px,
+    transparent 85px, 
+    transparent 90px,
+    var(--primary-100) 90px, 
+    var(--primary-100) 95px,
+    transparent 95px);
 }
 
 .ctaDescription {
   font-size: 1.25rem;
   margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
 }
 
 .ctaButtons {
@@ -434,36 +700,41 @@ a.secondary {
 
 .ctaPrimaryButton {
   background-color: var(--primary-100);
-  color: #333;
+  color: #0A0A0A;
   padding: 0.875rem 2rem;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border: 1px solid var(--primary-100);
 }
 
 .ctaPrimaryButton:hover {
   background-color: var(--primary-80);
+  border-color: var(--primary-80);
+  color: #000000;
   transform: translateY(-2px);
 }
 
 .ctaSecondaryButton {
   background-color: transparent;
-  color: white;
+  color: var(--primary-100);
   padding: 0.875rem 2rem;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
-  border: 2px solid white;
+  border: 2px solid var(--primary-100);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .ctaSecondaryButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--secondary-100);
+  border-color: var(--secondary-100);
+  color: var(--primary-100);
   transform: translateY(-2px);
 }
 
@@ -552,6 +823,59 @@ a.secondary {
 /* Sección de marcas */
 .brandsSection {
   padding: 4rem 0;
-  background-color: #f8f8f8;
-  border-top: 1px solid #eee;
+  background-color: var(--background-default);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Añadir efecto de líneas técnicas en la parte superior */
+.brandsSection::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--primary-100),
+    var(--primary-100) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+}
+
+/* Eliminar el subrayado general del título en la sección de marcas */
+.brandsSection .sectionTitle::after {
+  display: none;
+}
+
+/* Estilo para el subrayado amarillo en "Mejores Marcas" */
+.brandsSection .sectionTitle span {
+  position: relative;
+  display: inline-block;
+}
+
+.brandsSection .sectionTitle span::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  background-color: var(--primary-100);
+  bottom: -10px;
+  left: 0;
+  border-radius: 3px;
+}
+
+/* Nota para modificar el componente BrandSlider */
+/* Añadir clase para aplicar efectos de color a los logos */
+.brandLogo {
+  filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(10deg) saturate(1) brightness(1.1);
+  transition: filter 0.3s ease;
+  max-height: 60px;
+  margin: 0 auto;
+}
+
+.brandLogo:hover {
+  filter: grayscale(0%) brightness(1) sepia(50%) hue-rotate(10deg) saturate(2) brightness(1.2);
 }

@@ -1,6 +1,6 @@
 .footer {
-  background-color: #333;
-  color: #f8f8f8;
+  background-color: var(--background-default);
+  color: var(--text-primary);
   padding: 4rem 0 2rem;
   font-size: 0.95rem;
 }
@@ -29,10 +29,22 @@
   text-decoration: none;
 }
 
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logoImage {
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  width: auto;
+  height: 40px;
+}
+
 .logoText {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #f8f8f8;
+  color: var(--text-primary);
 }
 
 .logoText span {
@@ -40,7 +52,7 @@
 }
 
 .footerDescription {
-  color: #ccc;
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
@@ -55,17 +67,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #f8f8f8;
+  background-color: #333;
+  color: white;
   transition: all 0.3s ease;
 }
 
 .socialLinks a:hover {
-  background-color: var(--primary-100);
-  color: #333;
+  background-color: #ffcc00;
+  color: #1a1a1a;
   transform: translateY(-2px);
 }
 
@@ -73,7 +85,7 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1.25rem;
-  color: #f8f8f8;
+  color: var(--text-primary);
   position: relative;
   padding-bottom: 0.75rem;
 }
@@ -99,7 +111,7 @@
 }
 
 .footerLinks a {
-  color: #ccc;
+  color: var(--text-secondary);
   text-decoration: none;
   transition: all 0.3s ease;
   position: relative;
@@ -119,7 +131,7 @@
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  color: #ccc;
+  color: var(--text-secondary);
 }
 
 .contactIcon {
@@ -130,7 +142,7 @@
 
 .footerBottom {
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--secondary-100);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -140,7 +152,7 @@
 
 .footerBottom p {
   margin-bottom: 0;
-  color: #999;
+  color: var(--text-tertiary);
 }
 
 .footerBottomLinks {
@@ -149,7 +161,7 @@
 }
 
 .footerBottomLinks a {
-  color: #ccc;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s ease;
