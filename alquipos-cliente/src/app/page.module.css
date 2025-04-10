@@ -240,23 +240,25 @@ a.secondary {
 
 .sectionTitle {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 1.5rem;
   position: relative;
   display: inline-block;
-  padding-bottom: 0.5rem;
-  font-weight: var(--font-weight-black); /* Título más robusto */
 }
 
-.sectionTitle::after {
+.sectionTitle span {
+  position: relative;
+}
+
+.sectionTitle span::after {
   content: '';
   position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 60px;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
   height: 3px;
-  background-color: var(--primary-100);
+  background-color: #FFDE59;
 }
 
 .sectionSubtitle {

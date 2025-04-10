@@ -29,6 +29,18 @@
   text-decoration: none;
 }
 
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logoImage {
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  width: auto;
+  height: 40px;
+}
+
 .logoText {
   font-size: 1.8rem;
   font-weight: bold;
@@ -55,17 +67,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: var(--secondary-100);
-  color: var(--text-primary);
+  background-color: #333;
+  color: white;
   transition: all 0.3s ease;
 }
 
 .socialLinks a:hover {
-  background-color: var(--primary-100);
-  color: #0A0A0A;
+  background-color: #ffcc00;
+  color: #1a1a1a;
   transform: translateY(-2px);
 }
 

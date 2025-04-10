@@ -1,9 +1,25 @@
 .sliderContainer {
-  width: 100%;
-  overflow: hidden;
-  background-color: #1E1E1E; /* Gris más claro que el fondo principal pero más oscuro que --background-light */
-  padding: 3rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
   position: relative;
+  background-color: transparent;
+  
+  /* Efecto de desvanecimiento en los bordes */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
 }
 
 .sliderContainer::before,
@@ -19,12 +35,12 @@
 
 .sliderContainer::before {
   left: 0;
-  background: linear-gradient(to right, #1E1E1E, rgba(30, 30, 30, 0));
+  background: linear-gradient(to right, transparent, rgba(30, 30, 30, 0));
 }
 
 .sliderContainer::after {
   right: 0;
-  background: linear-gradient(to left, #1E1E1E, rgba(30, 30, 30, 0));
+  background: linear-gradient(to left, transparent, rgba(30, 30, 30, 0));
 }
 
 .slider {
