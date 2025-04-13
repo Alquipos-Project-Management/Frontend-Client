@@ -1,0 +1,238 @@
+.pageWrapper {
+  min-height: calc(100vh - 80px);
+  background-color: var(--background-default);
+  background-image: 
+    linear-gradient(rgba(30, 30, 30, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 30, 30, 0.3) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center center;
+  width: 100%;
+  position: relative;
+  padding-top: 2rem;
+}
+
+.pageWrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--primary-100),
+    var(--primary-100) 15px,
+    transparent 15px,
+    transparent 30px
+  );
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem var(--space-md);
+  animation: fadeIn var(--transition-normal);
+}
+
+.headerSection {
+  text-align: center;
+  margin: 3rem auto var(--space-xxl);
+  padding-top: 2rem;
+  animation: slideDown var(--transition-normal);
+  max-width: 800px;
+}
+
+.mainTitle {
+  color: var(--text-primary);
+  font-size: 2.5rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-md);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 1rem;
+}
+
+.mainTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background-color: var(--primary-100);
+  border-radius: 3px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: var(--space-lg) auto 0;
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  margin-top: var(--space-xxl);
+}
+
+@media (min-width: 768px) {
+  .contentGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .valuesCard {
+    grid-column: 1 / -1;
+  }
+}
+
+.fadeInUp {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.missionCard,
+.visionCard,
+.valuesCard {
+  background-color: var(--background-light);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--secondary-80);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.missionCard.visible,
+.visionCard.visible,
+.valuesCard.visible {
+  animation: none;
+}
+
+.cardTitle {
+  color: var(--text-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-lg);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.cardIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--primary-100);
+}
+
+.cardTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary-100);
+  border-radius: 2px;
+}
+
+.cardContent {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.valuesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.valueItem {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  background-color: rgba(40, 40, 40, 0.8);
+  padding: var(--space-md);
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--primary-100);
+  transition: transform var(--transition-fast);
+}
+
+.valuesCard.visible .valueItem {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.valuesCard.visible .valueItem:nth-child(1) {
+  transition-delay: 0.2s;
+}
+
+.valuesCard.visible .valueItem:nth-child(2) {
+  transition-delay: 0.4s;
+}
+
+.valuesCard.visible .valueItem:nth-child(3) {
+  transition-delay: 0.6s;
+}
+
+.valueTitle {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.valueIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--primary-100);
+}
+
+.valueDescription {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+} 

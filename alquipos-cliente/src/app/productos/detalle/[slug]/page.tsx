@@ -168,38 +168,6 @@ export default function ProductPage({ params }: ProductPageProps) {
               <p>{product.description}</p>
             </div>
             
-            {product.show_price && (
-              <div className={styles.productPricing}>
-                <h3>Precio de alquiler</h3>
-                <div className={styles.priceContainer}>
-                  {product.sale_price ? (
-                    <>
-                      <span className={styles.salePrice}>
-                        ${product.sale_price.toLocaleString()}
-                      </span>
-                      <span className={`${styles.regularPrice} ${styles.hasDiscount}`}>
-                        ${product.price?.toLocaleString()}
-                      </span>
-                    </>
-                  ) : (
-                    <span className={styles.regularPrice}>
-                      ${product.price?.toLocaleString()}
-                    </span>
-                  )}
-                  <span className={styles.priceUnit}>
-                    / {product.price_unit}
-                  </span>
-                </div>
-                
-                {product.min_rental_period && (
-                  <div className={styles.rentalPeriod}>
-                    <span>Período mínimo de alquiler: </span>
-                    <strong>{product.min_rental_period} {product.rental_period_unit}</strong>
-                  </div>
-                )}
-              </div>
-            )}
-            
             <div className={styles.productAvailability}>
               <h3>Disponibilidad</h3>
               <span className={`${styles.availabilityBadge} ${product.is_available ? styles.available : styles.unavailable}`}>
@@ -272,11 +240,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                   <div className={styles.relatedInfo}>
                     <h3>{related.name}</h3>
                     <p>{related.short_description}</p>
-                    {related.show_price && related.price && (
-                      <span className={styles.relatedPrice}>
-                        ${related.price.toLocaleString()} / {related.price_unit}
-                      </span>
-                    )}
                   </div>
                 </Link>
               ))}
