@@ -113,13 +113,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 {hoveredProduct === product.id && (
                   <div className={styles.productOverlay}>
                     <div className={styles.productInfo}>
-                      <h4>Características:</h4>
-                      <ul>
-                        {product.attributes && Object.entries(product.attributes).map(([key, value]) => (
-                          <li key={key}><strong>{key}:</strong> {value}</li>
-                        ))}
-                      </ul>
-                      <span className={styles.viewButton}>Ver detalles</span>
+                      <h3>{product.name}</h3>
+                      <p>{product.short_description}</p>
+                      <div className={styles.productMeta}>
+                        <span className={`${styles.availabilityBadge} ${product.is_available ? styles.available : styles.unavailable}`}>
+                          {product.is_available ? 'Disponible' : 'No disponible'}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -127,24 +127,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               <div className={styles.productContent}>
                 <h3 className={styles.productTitle}>{product.name}</h3>
                 <p className={styles.productDescription}>{product.short_description}</p>
-                {product.show_price && (
-                  <div className={styles.productPrice}>
-                    {product.sale_price ? (
-                      <>
-                        <span className={styles.salePrice}>
-                          ${product.sale_price.toLocaleString()} / {product.price_unit}
-                        </span>
-                        <span className={styles.regularPrice}>
-                          ${product.price?.toLocaleString()}
-                        </span>
-                      </>
-                    ) : (
-                      <span className={styles.regularPrice}>
-                        ${product.price?.toLocaleString()} / {product.price_unit}
-                      </span>
-                    )}
-                  </div>
-                )}
                 <div className={styles.productMeta}>
                   <span className={styles.availability}>
                     {product.is_available ? 'Disponible' : 'No disponible'}
