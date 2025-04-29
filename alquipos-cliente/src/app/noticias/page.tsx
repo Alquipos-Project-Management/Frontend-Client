@@ -1,51 +1,108 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { newsService, NewsItem, NewsDetail } from '@/services/news';
 import styles from './noticias.module.css';
-
-// Example news data - this would come from your API/CMS in production
-const newsItems = [
-  {
-    id: 1,
-    title: 'Nueva Excavadora CAT 320',
-    description: 'Ampliamos nuestra flota con la última excavadora CAT 320, ofreciendo mayor eficiencia y tecnología avanzada para sus proyectos. Esta adquisición representa un paso importante en nuestra misión de proporcionar equipos de primera clase para satisfacer las necesidades de nuestros clientes. La CAT 320 viene equipada con las últimas innovaciones en tecnología de construcción.',
-    date: '15 Marzo 2024',
-    category: 'Nuevo Equipo',
-    imageUrl: '/large-hydraulic-excavator-cat-6030-caterpillar.jpg'
-  },
-  {
-    id: 2,
-    title: 'Proyecto Exitoso: Construcción Centro Comercial',
-    description: 'Completamos exitosamente el suministro de equipos para la construcción del nuevo centro comercial en San José. Este proyecto emblemático demuestra nuestra capacidad para manejar proyectos de gran escala y nuestra dedicación a proporcionar soluciones integrales de equipamiento para construcciones comerciales.',
-    date: '10 Marzo 2024',
-    category: 'Proyectos',
-    imageUrl: '/large-hydraulic-excavator-cat-6030-caterpillar.jpg'
-  },
-  {
-    id: 3,
-    title: 'Certificación ISO 9001:2015',
-    description: 'Nos enorgullece anunciar que hemos obtenido la certificación ISO 9001:2015, reafirmando nuestro compromiso con la calidad. Esta certificación valida nuestros procesos de gestión de calidad y demuestra nuestro compromiso continuo con la excelencia en el servicio.',
-    date: '5 Marzo 2024',
-    category: 'Logros',
-    imageUrl: '/large-hydraulic-excavator-cat-6030-caterpillar.jpg'
-  },
-  {
-    id: 4,
-    title: 'Nuevos Montacargas Toyota',
-    description: 'Incorporamos a nuestra flota 5 nuevos montacargas Toyota de última generación para satisfacer la creciente demanda. Estos equipos cuentan con características avanzadas de seguridad y eficiencia, permitiéndonos ofrecer soluciones más efectivas para las necesidades de manejo de materiales de nuestros clientes.',
-    date: '1 Marzo 2024',
-    category: 'Nuevo Equipo',
-    imageUrl: '/large-hydraulic-excavator-cat-6030-caterpillar.jpg'
-  }
-];
+import { useRouter } from 'next/navigation';
 
 export default function NoticiasPage() {
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const router = useRouter();
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedNews, setSelectedNews] = useState<NewsDetail | null>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [imageLoading, setImageLoading] = useState<Record<string, boolean>>({});
 
-  const toggleExpand = (id: number) => {
-    setExpandedId(expandedId === id ? null : id);
+  // Fetch news items on component mount
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const items = await newsService.getNewsList();
+        setNewsItems(items);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Error al cargar las noticias';
+        setError(errorMessage);
+        console.error('Error fetching news:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  const handleNewsClick = async (id: string) => {
+    if (expandedId === id) {
+      setExpandedId(null);
+      setSelectedNews(null);
+      return;
+    }
+
+    setIsDetailLoading(true);
+    try {
+      // Since we already have the details from the initial fetch,
+      // we can just find the item in our state
+      const newsDetail = newsItems.find(item => item.id === id);
+      if (newsDetail) {
+        setSelectedNews(newsDetail as NewsDetail);
+        setExpandedId(id);
+      } else {
+        // Fallback to fetching if not found in state
+        const detail = await newsService.getNewsDetail(id);
+        setSelectedNews(detail);
+        setExpandedId(id);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al cargar la noticia';
+      console.error('Error fetching news detail:', err);
+      // Fallback to just expanding the card with summary
+      setExpandedId(id);
+    } finally {
+      setIsDetailLoading(false);
+    }
   };
+
+  const handleImageError = (id: string) => {
+    setImageErrors(prev => ({ ...prev, [id]: true }));
+  };
+
+  if (isLoading) {
+    return (
+      <div className={styles.pageWrapper}>
+        <div className={styles.container}>
+          <div className={styles.loading}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Cargando noticias...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.pageWrapper}>
+        <div className={styles.container}>
+          <div className={styles.error}>
+            <h2>Error al cargar las noticias</h2>
+            <p>{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className={styles.retryButton}
+            >
+              Intentar nuevamente
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.pageWrapper}>
@@ -59,48 +116,89 @@ export default function NoticiasPage() {
         </div>
         
         <div className={styles.newsGrid}>
-          {newsItems.map((item) => (
-            <article 
-              key={item.id} 
-              className={`${styles.newsCard} ${expandedId === item.id ? styles.expanded : ''}`}
-              onClick={() => toggleExpand(item.id)}
-            >
-              <div className={styles.newsImageContainer}>
-                <div className={styles.categoryBadge}>{item.category}</div>
-                <div className={styles.imageWrapper}>
-                  <Image 
-                    src={item.imageUrl} 
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className={styles.newsImage}
-                    priority={item.id === 1}
-                    style={{ objectFit: 'cover', objectPosition: 'center' }}
-                    onError={(e) => {
-                      // Fallback to a gradient background if image fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      target.parentElement?.classList.add(styles.fallbackImage);
-                    }}
-                  />
-                </div>
-              </div>
-              <div className={styles.newsContent}>
-                <div className={styles.newsDate}>{item.date}</div>
-                <h2 className={styles.newsTitle}>{item.title}</h2>
-                <p className={styles.newsDescription}>
-                  {expandedId === item.id ? item.description : `${item.description.slice(0, 100)}...`}
-                </p>
-                {expandedId === item.id && (
-                  <div className={styles.contactSection}>
-                    <a href="/contact" className={styles.contactButton}>
-                      Contáctenos
-                    </a>
+          {newsItems.map((item) => {
+            const dimensions = newsService.getImageDimensions(item);
+            const hasImageError = imageErrors[item.id];
+            const isLoading = imageLoading[item.id];
+            
+            return (
+              <article 
+                key={item.id} 
+                className={`${styles.newsCard} ${expandedId === item.id ? styles.expanded : ''}`}
+                onClick={() => handleNewsClick(item.id)}
+              >
+                <div className={styles.newsImageContainer}>
+                  <div className={styles.categoryBadge}>
+                    {item.tags[0] || 'Noticia'}
                   </div>
-                )}
-              </div>
-            </article>
-          ))}
+                  <div className={styles.imageWrapper}>
+                    {!hasImageError && (
+                      <>
+                        {isLoading && (
+                          <div className={styles.imageLoading}>
+                            <div className={styles.loadingSpinner}></div>
+                          </div>
+                        )}
+                        <Image 
+                          src={newsService.getImageUrl(item)}
+                          alt={item.title}
+                          width={dimensions.width}
+                          height={dimensions.height}
+                          className={styles.newsImage}
+                          priority={item.is_featured}
+                          onError={() => handleImageError(item.id)}
+                          onLoadingComplete={() => setImageLoading(prev => ({ ...prev, [item.id]: false }))}
+                          onLoadStart={() => setImageLoading(prev => ({ ...prev, [item.id]: true }))}
+                          style={dimensions.style}
+                        />
+                      </>
+                    )}
+                    {hasImageError && (
+                      <div className={styles.fallbackImage}>
+                        <Image 
+                          src="/large-hydraulic-excavator-cat-6030-caterpillar.jpg"
+                          alt="Imagen por defecto"
+                          width={dimensions.width}
+                          height={dimensions.height}
+                          className={styles.newsImage}
+                          style={dimensions.style}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className={styles.newsContent}>
+                  <div className={styles.newsDate}>
+                    {new Date(item.created_at).toLocaleDateString('es-ES', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </div>
+                  <h2 className={styles.newsTitle}>{item.title}</h2>
+                  {isDetailLoading && expandedId === item.id ? (
+                    <div className={styles.loadingDetail}>
+                      <div className={styles.loadingSpinner}></div>
+                      <p>Cargando contenido...</p>
+                    </div>
+                  ) : (
+                    <p className={styles.newsDescription}>
+                      {expandedId === item.id && selectedNews 
+                        ? selectedNews.content 
+                        : `${item.summary.slice(0, 100)}...`}
+                    </p>
+                  )}
+                  {expandedId === item.id && (
+                    <div className={styles.contactSection}>
+                      <a href="/contact" className={styles.contactButton}>
+                        Contáctenos
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </div>

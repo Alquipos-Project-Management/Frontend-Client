@@ -21,6 +21,7 @@ export interface ContactPageContent {
   };
   status: string; // 'published' | 'draft'
   display_order: number;
+  content_type: string; // 'text' | 'image' | 'video' etc.
   metadata?: Record<string, any>;
   language: string;
   version: number;
