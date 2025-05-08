@@ -40,13 +40,15 @@ const mockClient = {
 // Initialize with mock client
 let supabaseClient: SupabaseClient = mockClient;
 let isInitialized = false;
-let initializationPromise: Promise<void> | null = null;
+let initializationPromise: Promise<SupabaseClient> | null = null;
+let initializationAttempts = 0;
+const MAX_INITIALIZATION_ATTEMPTS = 3;
 
-const initializeSupabase = async () => {
-  if (isInitialized) return;
+const initializeSupabase = async (): Promise<SupabaseClient> => {
+  if (isInitialized) return supabaseClient;
   if (initializationPromise) return initializationPromise;
 
-  initializationPromise = (async () => {
+  initializationPromise = (async (): Promise<SupabaseClient> => {
     try {
       if (!supabaseUrl || !supabaseAnonKey) {
         throw new Error('Missing Supabase credentials');
@@ -65,34 +67,47 @@ const initializeSupabase = async () => {
         },
       });
 
-      // Test the connection
-      try {
-        await client.from('news').select('id').limit(1);
-        console.log('Supabase connection successful');
-        supabaseClient = client;
-        isInitialized = true;
-      } catch (error: unknown) {
-        console.error('Supabase connection test failed:', error);
-        throw error;
+      // Test the connection with retry logic
+      while (initializationAttempts < MAX_INITIALIZATION_ATTEMPTS) {
+        try {
+          await client.from('news').select('id').limit(1);
+          console.log('Supabase connection successful');
+          supabaseClient = client;
+          isInitialized = true;
+          return client;
+        } catch (error) {
+          initializationAttempts++;
+          if (initializationAttempts === MAX_INITIALIZATION_ATTEMPTS) {
+            throw error;
+          }
+          // Wait before retrying (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, initializationAttempts) * 1000));
+        }
       }
+      throw new Error('Failed to initialize Supabase client after maximum attempts');
     } catch (error) {
       console.error('Error initializing Supabase client:', error);
-      // Keep the mock client if initialization fails
+      // Reset initialization state on failure
+      isInitialized = false;
+      initializationPromise = null;
+      throw error;
     }
   })();
 
   return initializationPromise;
 };
 
-// Initialize the client immediately
-void initializeSupabase();
-
 // Create a wrapper that ensures initialization
-const getSupabaseClient = async () => {
-  if (!isInitialized) {
-    await initializeSupabase();
+const getSupabaseClient = async (): Promise<SupabaseClient> => {
+  try {
+    if (!isInitialized) {
+      await initializeSupabase();
+    }
+    return supabaseClient;
+  } catch (error) {
+    console.error('Failed to get Supabase client:', error);
+    throw error;
   }
-  return supabaseClient;
 };
 
 export const supabase = {
@@ -225,9 +240,56 @@ export const rentalService = {
   },
 };
 
-// Export all services
+// Dynamic Content Service Definition (should be before the final export default)
+export interface DynamicContentRpcResponseItem {
+  id: string;
+  status: string;
+  content: any; 
+  page_key: string;
+  created_at: string;
+  updated_at: string;
+  section_key: string;
+  content_type: string;
+  display_order: number;
+}
+
+export interface DynamicContentRpcResponse {
+  success: boolean;
+  message: string;
+  data: {
+    items: DynamicContentRpcResponseItem[];
+  };
+}
+
+export const dynamicContentService = {
+  getPageContent: async (pageKey: string): Promise<DynamicContentRpcResponse[]> => {
+    try {
+      const client = await getSupabaseClient();
+      const { data, error } = await client.rpc('rpc_dynamic_content_list', {
+        p_page_key: pageKey,
+      });
+
+      if (error) {
+        console.error(`Error fetching dynamic page content for page key "${pageKey}":`, error);
+        throw error;
+      }
+      
+      if (!Array.isArray(data)) {
+        console.error('Unexpected response format from rpc_dynamic_content_list. Expected an array.');
+        throw new Error('Unexpected response format from RPC.');
+      }
+      return data as DynamicContentRpcResponse[];
+    } catch (error) {
+      console.error(`Error in dynamicContentService.getPageContent for pageKey ${pageKey}:`, error);
+      throw error; 
+    }
+  },
+};
+
+// Consolidated Export all services
 export default {
   auth,
   equipmentService,
   rentalService,
+  dynamicContentService, // Ensure this is the only default export and it's at the end
 }; 
