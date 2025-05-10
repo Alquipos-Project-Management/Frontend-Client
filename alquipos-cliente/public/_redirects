@@ -1,0 +1,4 @@
+# Redirecciones para Next.js en Netlify
+/_next/* /_next/:splat 200
+/api/* /api/:splat 200
+/* /index.html 200 

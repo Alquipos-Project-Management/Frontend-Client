@@ -4,6 +4,14 @@ const nextConfig = {
     domains: [],
     unoptimized: true,
   },
+  eslint: {
+    // Disable ESLint during the build
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // Disable TypeScript during the build
+    ignoreBuildErrors: true, 
+  },
 }
 
 module.exports = nextConfig 

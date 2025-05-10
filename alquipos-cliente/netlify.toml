@@ -2,5 +2,25 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  NEXT_TELEMETRY_DISABLED = "1"
+  
+# Importante: estas configuraciones son necesarias para Next.js
+[build.processing]
+  skip_processing = true
+
+# Configuración específica para Next.js en Netlify
 [[plugins]]
-  package = "@netlify/plugin-nextjs" 
+  package = "@netlify/plugin-nextjs"
+
+# Las siguientes redirecciones son críticas para el funcionamiento correcto
+[[redirects]]
+  from = "/_next/*"
+  to = "/_next/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false 

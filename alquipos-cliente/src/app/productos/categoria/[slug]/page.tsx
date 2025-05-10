@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { categories, products } from '@/mock/products';
@@ -25,40 +25,14 @@ const getProductImage = (product: any) => {
   return imagen3.src;
 };
 
-interface CategoryPageProps {
-  params: {
-    slug: string;
-  };
-}
+type PageProps = {
+  params: { slug: string };
+};
 
-export default function CategoryPage({ params }: CategoryPageProps) {
+export default function CategoryPage({ params }: PageProps) {
   const { slug } = params;
   const category = categories.find(cat => cat.slug === slug);
   const categoryProducts = products.filter(product => product.category_id === category?.id);
-  
-  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
-  const [isRelatedVisible, setIsRelatedVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const relatedSection = document.querySelector('#relatedSection');
-      
-      if (relatedSection) {
-        const relatedSectionPosition = relatedSection.getBoundingClientRect().top;
-        if (relatedSectionPosition < window.innerHeight * 0.75 && !isRelatedVisible) {
-          setIsRelatedVisible(true);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    // Ejecutar una vez para comprobar si la sección ya es visible sin scroll
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isRelatedVisible]);
 
   if (!category) {
     return (
@@ -99,8 +73,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               href={`/productos/detalle/${product.slug}`}
               key={product.id}
               className={styles.productCard}
-              onMouseEnter={() => setHoveredProduct(product.id)}
-              onMouseLeave={() => setHoveredProduct(null)}
             >
               <div className={styles.productImageContainer}>
                 <Image 
@@ -110,19 +82,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   height={300}
                   className={styles.productImage}
                 />
-                {hoveredProduct === product.id && (
-                  <div className={styles.productOverlay}>
-                    <div className={styles.productInfo}>
-                      <h3>{product.name}</h3>
-                      <p>{product.short_description}</p>
-                      <div className={styles.productMeta}>
-                        <span className={`${styles.availabilityBadge} ${product.is_available ? styles.available : styles.unavailable}`}>
-                          {product.is_available ? 'Disponible' : 'No disponible'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
               <div className={styles.productContent}>
                 <h3 className={styles.productTitle}>{product.name}</h3>
@@ -143,7 +102,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         </div>
       </section>
 
-      <section id="relatedSection" className={`${styles.relatedSection} ${isRelatedVisible ? styles.visible : ''}`}
+      <section id="relatedSection" className={styles.relatedSection}
         style={{
           backgroundImage: `linear-gradient(rgba(17, 17, 17, 0.95), rgba(17, 17, 17, 0.95)), url(${backgroundImages.pattern})`,
           backgroundSize: 'auto',

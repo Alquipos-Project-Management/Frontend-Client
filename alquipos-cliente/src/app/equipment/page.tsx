@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { equipmentService } from '@/services/supabase';
+import { equipmentService } from '@/services/equipment';
 import { ROUTES } from '@/constants/routes';
 
 interface Equipment {

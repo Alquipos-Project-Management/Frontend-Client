@@ -6,7 +6,7 @@ import Link from 'next/link';
 import HeroCarousel from '@/components/molecules/Carousel/HeroCarousel';
 import BrandSlider from '@/components/molecules/BrandSlider/BrandSlider';
 import styles from './page.module.css';
-import { dynamicContentService, DynamicContentRpcResponseItem } from '@/services/supabase';
+import { dynamicContentService, DynamicContentRpcResponseItem } from '@/services/dynamicContent';
 
 // Interfaces for processed dynamic content (subset of what API might provide)
 interface HeroSlide {
@@ -178,9 +178,7 @@ export default function Home() {
   const [dynamicBenefitsData, setDynamicBenefitsData] = useState<BenefitsData | null>(null);
   const [dynamicBrandsData, setDynamicBrandsData] = useState<BrandsData | null>(null);
   const [dynamicFeaturedProductsData, setDynamicFeaturedProductsData] = useState<FeaturedProductsData | null>(null);
-  // Add state for Testimonials header if you plan to use it
-  // const [dynamicTestimonialsHeader, setDynamicTestimonialsHeader] = useState<any>(null);
-
+  const [isError, setIsError] = useState(false);
 
   // Refs for animaciones al hacer scroll
   const categoriesRef = useRef<HTMLElement>(null);
@@ -299,12 +297,31 @@ export default function Home() {
           
           setImagesLoaded(true); // Indicate data is ready for hero carousel
         } else {
-          console.error("Failed to fetch dynamic content or content is empty/invalid for 'home' page.");
-          setImagesLoaded(true); // Still show page, perhaps with placeholders or empty states
+          console.warn("Using fallback data: No dynamic content or empty response");
+          // Set default fallback data for each section
+          setDynamicHeroSlides([
+            {
+              id: 1,
+              title: "Equipos de Construcción de Alta Calidad",
+              subtitle: "Alquile equipos profesionales para su proyecto",
+              ctaText: "Explorar Equipos",
+              ctaLink: "/equipment",
+              imageUrl: DEFAULT_IMAGES.hero[0]
+            },
+            {
+              id: 2,
+              title: "Maquinaria pesada y equipos de construcción",
+              subtitle: "Alquile la mejor maquinaria para su proyecto con servicio técnico incluido",
+              ctaText: "Solicitar cotización",
+              ctaLink: "/contact",
+              imageUrl: DEFAULT_IMAGES.hero[1]
+            }
+          ]);
         }
       } catch (error) {
         console.error("Error fetching dynamic page data for 'home':", error);
-        setImagesLoaded(true); // Allow UI to render even if data fetch fails
+        setIsError(true);
+        setImagesLoaded(true);
       }
     };
 
