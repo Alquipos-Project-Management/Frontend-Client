@@ -30,6 +30,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        {/* Script crítico que debe ejecutarse antes que cualquier otro JavaScript */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.__ENV__ = {
+              NEXT_PUBLIC_SUPABASE_URL: "${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}",
+              NEXT_PUBLIC_SUPABASE_ANON_KEY: "${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''}",
+              NEXT_PUBLIC_DEFAULT_ROLE_ID: "${process.env.NEXT_PUBLIC_DEFAULT_ROLE_ID || ''}"
+            };
+            console.log("Variables de entorno inicializadas en el script pre-carga");
+          `
+        }} />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ClientProviders>
           <Navbar />
@@ -42,17 +55,6 @@ export default function RootLayout({
             email="contacto@alquipos.com" 
           />
         </ClientProviders>
-        
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            window.__ENV__ = {
-              NEXT_PUBLIC_SUPABASE_URL: "${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}",
-              NEXT_PUBLIC_SUPABASE_ANON_KEY: "${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''}",
-              NEXT_PUBLIC_DEFAULT_ROLE_ID: "${process.env.NEXT_PUBLIC_DEFAULT_ROLE_ID || ''}"
-            };
-            console.log("ENV variables initialized from inline script");
-          `
-        }} />
       </body>
     </html>
   );

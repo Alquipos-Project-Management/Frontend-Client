@@ -3,16 +3,26 @@
 
 (function initEnv() {
   if (typeof window !== 'undefined') {
+    // Inicializar objeto de entorno global
     window.__ENV__ = window.__ENV__ || {};
     
-    // Add all NEXT_PUBLIC environment variables
-    window.__ENV__.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    window.__ENV__.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    window.__ENV__.NEXT_PUBLIC_DEFAULT_ROLE_ID = process.env.NEXT_PUBLIC_DEFAULT_ROLE_ID;
+    // Obtener variables de entorno de Next.js (disponibles en tiempo de compilación)
+    const nextPublicEnvVars = {};
+    Object.keys(process.env || {}).forEach(key => {
+      if (key.startsWith('NEXT_PUBLIC_')) {
+        nextPublicEnvVars[key] = process.env[key];
+      }
+    });
     
-    console.log('Environment variables initialized in browser:', {
-      url_available: !!window.__ENV__.NEXT_PUBLIC_SUPABASE_URL,
-      key_available: !!window.__ENV__.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    // Fusionar variables de diferentes fuentes, priorizando las ya existentes
+    window.__ENV__ = {
+      ...nextPublicEnvVars,
+      ...window.__ENV__
+    };
+    
+    console.log('Variables de entorno disponibles en cliente:', {
+      supabaseUrl: !!window.__ENV__?.NEXT_PUBLIC_SUPABASE_URL,
+      supabaseKey: !!window.__ENV__?.NEXT_PUBLIC_SUPABASE_ANON_KEY
     });
   }
 })();
