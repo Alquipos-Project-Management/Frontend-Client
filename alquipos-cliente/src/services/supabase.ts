@@ -24,7 +24,7 @@ const mockClient = {
 };
 
 // Create a client if credentials are available, otherwise use mock
-export const supabase = (() => {
+const supabaseClient = (() => {
   if (supabaseUrl && supabaseAnonKey) {
     try {
       return createClient(supabaseUrl, supabaseAnonKey, {
@@ -48,11 +48,14 @@ export const supabase = (() => {
   return mockClient;
 })();
 
+// Export supabase client
+export const supabase = supabaseClient;
+
 // Auth services
 export const auth = {
   signUp: async (email: string, password: string) => {
     try {
-      return await supabase.auth.signUp({ email, password });
+      return await supabaseClient.auth.signUp({ email, password });
     } catch (error) {
       console.error('Auth signUp error:', error);
       throw error;
@@ -60,7 +63,7 @@ export const auth = {
   },
   signIn: async (email: string, password: string) => {
     try {
-      return await supabase.auth.signInWithPassword({ email, password });
+      return await supabaseClient.auth.signInWithPassword({ email, password });
     } catch (error) {
       console.error('Auth signIn error:', error);
       throw error;
@@ -68,7 +71,7 @@ export const auth = {
   },
   signOut: async () => {
     try {
-      return await supabase.auth.signOut();
+      return await supabaseClient.auth.signOut();
     } catch (error) {
       console.error('Auth signOut error:', error);
       throw error;
@@ -76,7 +79,7 @@ export const auth = {
   },
   getSession: async () => {
     try {
-      return await supabase.auth.getSession();
+      return await supabaseClient.auth.getSession();
     } catch (error) {
       console.error('Auth getSession error:', error);
       throw error;
@@ -84,7 +87,7 @@ export const auth = {
   },
   getUser: async () => {
     try {
-      return await supabase.auth.getUser();
+      return await supabaseClient.auth.getUser();
     } catch (error) {
       console.error('Auth getUser error:', error);
       throw error;
@@ -96,7 +99,7 @@ export const auth = {
 export const equipmentService = {
   getAll: async () => {
     try {
-      return await supabase.from('equipment').select('*');
+      return await supabaseClient.from('equipment').select('*');
     } catch (error) {
       console.error('Equipment getAll error:', error);
       return { data: [], error };
@@ -104,7 +107,7 @@ export const equipmentService = {
   },
   getById: async (id: string) => {
     try {
-      return await supabase.from('equipment').select('*').eq('id', id).single();
+      return await supabaseClient.from('equipment').select('*').eq('id', id).single();
     } catch (error) {
       console.error('Equipment getById error:', error);
       return { data: null, error };
@@ -116,7 +119,7 @@ export const equipmentService = {
 export const rentalService = {
   getAll: async () => {
     try {
-      return await supabase.from('rentals').select('*');
+      return await supabaseClient.from('rentals').select('*');
     } catch (error) {
       console.error('Rental getAll error:', error);
       return { data: [], error };
@@ -124,7 +127,7 @@ export const rentalService = {
   },
   getById: async (id: string) => {
     try {
-      return await supabase.from('rentals').select('*').eq('id', id).single();
+      return await supabaseClient.from('rentals').select('*').eq('id', id).single();
     } catch (error) {
       console.error('Rental getById error:', error);
       return { data: null, error };
@@ -132,7 +135,7 @@ export const rentalService = {
   },
   create: async (data: any) => {
     try {
-      return await supabase.from('rentals').insert(data);
+      return await supabaseClient.from('rentals').insert(data);
     } catch (error) {
       console.error('Rental create error:', error);
       return { data: null, error };
@@ -164,7 +167,7 @@ export interface DynamicContentRpcResponse {
 export const dynamicContentService = {
   getPageContent: async (pageKey: string): Promise<any> => {
     try {
-      const { data, error } = await supabase.rpc('rpc_dynamic_content_list', {
+      const { data, error } = await supabaseClient.rpc('rpc_dynamic_content_list', {
         p_page_key: pageKey
       });
       
@@ -196,7 +199,7 @@ export const dynamicContentService = {
   },
   getSectionContent: async (pageKey: string, sectionKey: string): Promise<any> => {
     try {
-      const { data, error } = await supabase.rpc('rpc_dynamic_content_get', {
+      const { data, error } = await supabaseClient.rpc('rpc_dynamic_content_get', {
         p_page_key: pageKey,
         p_section_key: sectionKey
       });

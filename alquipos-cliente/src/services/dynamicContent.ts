@@ -20,6 +20,15 @@ export interface DynamicContentRpcResponse {
   };
 }
 
+// Mock data for when Supabase is unavailable
+const mockPageContent = {
+  success: true,
+  message: "Mock data",
+  data: {
+    items: []
+  }
+};
+
 export const dynamicContentService = {
   getPageContent: async (pageKey: string): Promise<any> => {
     try {
@@ -28,10 +37,15 @@ export const dynamicContentService = {
       });
       
       if (error) throw error;
+      
+      if (!data || data.length === 0) {
+        return [mockPageContent];
+      }
+      
       return data;
     } catch (error) {
       console.error('Dynamic content error:', error);
-      throw error;
+      return [mockPageContent];
     }
   },
   getSectionContent: async (pageKey: string, sectionKey: string): Promise<any> => {
@@ -42,10 +56,15 @@ export const dynamicContentService = {
       });
       
       if (error) throw error;
+      
+      if (!data) {
+        return mockPageContent;
+      }
+      
       return data;
     } catch (error) {
       console.error('Dynamic content section error:', error);
-      throw error;
+      return mockPageContent;
     }
   }
 }; 

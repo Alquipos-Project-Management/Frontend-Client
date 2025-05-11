@@ -12,6 +12,7 @@ const nextConfig = {
     // Disable TypeScript during the build
     ignoreBuildErrors: true, 
   },
+  output: 'standalone',
 }
 
 module.exports = nextConfig 

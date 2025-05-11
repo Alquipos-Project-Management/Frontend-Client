@@ -1,11 +1,14 @@
 [build]
   command = "npm run build"
   publish = ".next"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ./package-lock.json"
 
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
+  NODE_VERSION = "20.x"
+  NPM_VERSION = "10.x"
   
-# Importante: estas configuraciones son necesarias para Next.js
+# Configuración de procesamiento 
 [build.processing]
   skip_processing = true
 
@@ -13,14 +16,64 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Las siguientes redirecciones son críticas para el funcionamiento correcto
+# Habilitar Debug Logs
+[dev]
+  debug = true
+  
+# Configuración de funciones de Netlify
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = [".next/server/**", ".next/standalone/**", ".next/static/**"]
+
+# Redirecciones específicas para Next.js
+
+# Manejo de recursos estáticos
 [[redirects]]
-  from = "/_next/*"
-  to = "/_next/:splat"
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
   status = 200
+  force = true
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/_next/image*"
+  to = "/_next/image:splat"
   status = 200
-  force = false 
+  force = true
+
+[[redirects]]
+  from = "/_next/data/*"
+  to = "/_next/data/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/favicon.ico"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+  force = true
+
+# Manejo de API y otros recursos Next.js
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/nextjs-api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/_next/*"
+  to = "/.netlify/functions/nextjs-server"
+  status = 200
+  force = true
+
+# Redirección final para la navegación en el lado del cliente
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/nextjs-server"
+  status = 200 
