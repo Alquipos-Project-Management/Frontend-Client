@@ -1,4 +1,6 @@
-import { supabase } from './supabase';
+'use client';
+
+import { dynamicContentService as browserDynamicContentService } from './supabase-browser';
 
 export interface DynamicContentRpcResponseItem {
   id: string;
@@ -20,51 +22,5 @@ export interface DynamicContentRpcResponse {
   };
 }
 
-// Mock data for when Supabase is unavailable
-const mockPageContent = {
-  success: true,
-  message: "Mock data",
-  data: {
-    items: []
-  }
-};
-
-export const dynamicContentService = {
-  getPageContent: async (pageKey: string): Promise<any> => {
-    try {
-      const { data, error } = await supabase.rpc('rpc_dynamic_content_list', {
-        p_page_key: pageKey
-      });
-      
-      if (error) throw error;
-      
-      if (!data || data.length === 0) {
-        return [mockPageContent];
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('Dynamic content error:', error);
-      return [mockPageContent];
-    }
-  },
-  getSectionContent: async (pageKey: string, sectionKey: string): Promise<any> => {
-    try {
-      const { data, error } = await supabase.rpc('rpc_dynamic_content_get', {
-        p_page_key: pageKey,
-        p_section_key: sectionKey
-      });
-      
-      if (error) throw error;
-      
-      if (!data) {
-        return mockPageContent;
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('Dynamic content section error:', error);
-      return mockPageContent;
-    }
-  }
-}; 
+// Directly export the browser-specific implementation
+export const dynamicContentService = browserDynamicContentService; 
