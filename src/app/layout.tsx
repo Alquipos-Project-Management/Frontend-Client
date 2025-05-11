@@ -6,6 +6,7 @@ import ClientProviders from "@/components/providers/ClientProviders";
 import Navbar from "@/components/molecules/Navigation/Navbar";
 import Footer from "@/components/organisms/Footer/Footer";
 import { ContactFloatingButton } from "@/components/atoms/ContactFloatingButton";
+import "../env-init.js";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,17 @@ export default function RootLayout({
             email="contacto@alquipos.com" 
           />
         </ClientProviders>
+        
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.__ENV__ = {
+              NEXT_PUBLIC_SUPABASE_URL: "${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}",
+              NEXT_PUBLIC_SUPABASE_ANON_KEY: "${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''}",
+              NEXT_PUBLIC_DEFAULT_ROLE_ID: "${process.env.NEXT_PUBLIC_DEFAULT_ROLE_ID || ''}"
+            };
+            console.log("ENV variables initialized from inline script");
+          `
+        }} />
       </body>
     </html>
   );
