@@ -1,6 +1,6 @@
 'use client';
 
-import { dynamicContentService as browserDynamicContentService } from './supabase-browser';
+import supabase, { getDynamicContent } from './supabase-direct';
 
 export interface DynamicContentRpcResponseItem {
   id: string;
@@ -22,5 +22,21 @@ export interface DynamicContentRpcResponse {
   };
 }
 
-// Directly export the browser-specific implementation
-export const dynamicContentService = browserDynamicContentService; 
+// Servicio de contenido dinámico implementado directamente con Supabase
+export const dynamicContentService = {
+  getPageContent: async (pageKey: string): Promise<any> => {
+    console.log('Solicitando contenido para página:', pageKey);
+    return await getDynamicContent(pageKey);
+  },
+  
+  getSectionContent: async (pageKey: string, sectionKey: string): Promise<any> => {
+    console.log('Solicitando sección específica:', sectionKey, 'de página:', pageKey);
+    const { data, error } = await supabase.rpc('rpc_dynamic_content_get', {
+      p_page_key: pageKey,
+      p_section_key: sectionKey
+    });
+    
+    if (error) throw error;
+    return data;
+  }
+}; 
