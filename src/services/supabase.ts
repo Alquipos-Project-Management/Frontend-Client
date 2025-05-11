@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Get Supabase URL and Key from environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 // Create a mock implementation for when credentials are missing
 const mockClient = {
@@ -27,6 +27,7 @@ const mockClient = {
 const supabaseClient = (() => {
   if (supabaseUrl && supabaseAnonKey) {
     try {
+      console.log('Creating Supabase client with credentials');
       return createClient(supabaseUrl, supabaseAnonKey, {
         auth: {
           persistSession: true,
@@ -41,6 +42,7 @@ const supabaseClient = (() => {
       });
     } catch (error) {
       console.error('Error creating Supabase client:', error);
+      console.log('Falling back to mock client');
       return mockClient;
     }
   }
@@ -48,7 +50,7 @@ const supabaseClient = (() => {
   return mockClient;
 })();
 
-// Export supabase client
+// Initialize a client export for global use
 export const supabase = supabaseClient;
 
 // Auth services
@@ -147,7 +149,7 @@ export const rentalService = {
 export interface DynamicContentRpcResponseItem {
   id: string;
   status: string;
-  content: any; 
+  content: any;
   page_key: string;
   created_at: string;
   updated_at: string;
@@ -167,6 +169,17 @@ export interface DynamicContentRpcResponse {
 export const dynamicContentService = {
   getPageContent: async (pageKey: string): Promise<any> => {
     try {
+      if (!supabaseClient.rpc) {
+        console.error('RPC method not available on supabase client');
+        return [{
+          success: true,
+          message: "Mock data due to RPC not available",
+          data: {
+            items: []
+          }
+        }];
+      }
+      
       const { data, error } = await supabaseClient.rpc('rpc_dynamic_content_list', {
         p_page_key: pageKey
       });
@@ -214,12 +227,4 @@ export const dynamicContentService = {
 };
 
 // Make sure supabase is exported directly
-export { supabase };
-
-// Remove default export block
-// export default {
-//  dynamicContentService, // Ensure this is the only default export and it's at the end
-// };
-
-// Make sure there's no duplicate export for supabase
-// export { supabase }; 
+export { supabase as default }; 
