@@ -62,22 +62,6 @@ interface BrandsData {
   items: Brand[];
 }
 
-interface Product {
-  id: string;
-  name: string;
-  slug: string; // For linking to product details page
-  image: string;
-  price: number;
-  price_unit: string;
-  short_description: string;
-  sale_price?: number;
-}
-
-interface FeaturedProductsData {
-  title?: string;
-  items: Product[];
-}
-
 // --- SVG Icon Definitions & Mappings ---
 const categoryIcons: { [key: string]: React.ReactElement } = {
   andamios: (
@@ -129,9 +113,6 @@ const DEFAULT_IMAGES = {
   },
   brands: {
     default: '/assets/images/brands/default-brand.svg'
-  },
-  products: {
-    default: '/assets/images/products/default-product.jpg'
   }
 };
 
@@ -156,9 +137,6 @@ const getFallbackImage = (type: keyof typeof DEFAULT_IMAGES, key?: string): stri
   if (type === 'brands') {
     return DEFAULT_IMAGES.brands.default;
   }
-  if (type === 'products') {
-    return DEFAULT_IMAGES.products.default;
-  }
   return '/assets/images/default.jpg'; // Ultimate fallback
 };
 
@@ -177,7 +155,6 @@ export default function Home() {
   const [dynamicCategoriesData, setDynamicCategoriesData] = useState<CategoriesData | null>(null);
   const [dynamicBenefitsData, setDynamicBenefitsData] = useState<BenefitsData | null>(null);
   const [dynamicBrandsData, setDynamicBrandsData] = useState<BrandsData | null>(null);
-  const [dynamicFeaturedProductsData, setDynamicFeaturedProductsData] = useState<FeaturedProductsData | null>(null);
   const [isError, setIsError] = useState(false);
 
   // Refs for animaciones al hacer scroll
@@ -185,7 +162,6 @@ export default function Home() {
   const benefitsRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement>(null);
   const brandsRef = useRef<HTMLElement>(null);
-  const featuredProductsRef = useRef<HTMLElement>(null); // Ref for new section
 
   useEffect(() => {
     const fetchData = async () => {
@@ -274,26 +250,6 @@ export default function Home() {
               })).filter((brand: Brand) => !isNaN(brand.id))
             });
           }
-
-          // Process Featured Products
-          const featuredProductsContent = findApiSectionContent(sections, 'featured_products');
-          if (featuredProductsContent && featuredProductsContent.items) {
-            setDynamicFeaturedProductsData({
-              title: featuredProductsContent.title || "Productos Destacados",
-              items: featuredProductsContent.items.map((prod: any) => ({
-                id: prod.id,
-                name: prod.name,
-                slug: prod.slug,
-                image: isValidImageUrl(prod.image) 
-                  ? prod.image 
-                  : getFallbackImage('products'),
-                price: prod.price,
-                price_unit: prod.price_unit,
-                short_description: prod.short_description,
-                sale_price: prod.sale_price,
-              })),
-            });
-          }
           
           setImagesLoaded(true); // Indicate data is ready for hero carousel
         } else {
@@ -328,7 +284,6 @@ export default function Home() {
     fetchData();
   }, []);
 
-
   // Control de visibilidad del navbar al hacer scroll
   useEffect(() => {
     const handleScroll = () => {
@@ -347,8 +302,7 @@ export default function Home() {
         { ref: categoriesRef, className: styles.animateSection },
         { ref: benefitsRef, className: styles.animateSection },
         { ref: ctaRef, className: styles.animateSection },
-        { ref: brandsRef, className: styles.animateSection },
-        { ref: featuredProductsRef, className: styles.animateSection } // Add new section to animation
+        { ref: brandsRef, className: styles.animateSection }
       ];
       
       sectionsToAnimate.forEach(({ ref, className }) => {
@@ -492,42 +446,6 @@ export default function Home() {
               )}
             </div>
             <BrandSlider brands={dynamicBrandsData.items} />
-          </div>
-        </section>
-      )}
-
-      {/* Nueva Sección de Productos Destacados */}
-      {dynamicFeaturedProductsData && dynamicFeaturedProductsData.items.length > 0 && (
-        <section ref={featuredProductsRef} className={`${styles.featuredProductsSection} ${styles.sectionToAnimate}`}>
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>{dynamicFeaturedProductsData.title || 'Productos Destacados'}</h2>
-              {/* Add subtitle for featured products if available or needed */}
-            </div>
-            <div className={styles.productsGrid}> {/* Assuming a similar grid style, define in CSS */}
-              {dynamicFeaturedProductsData.items.map((product) => (
-                <div key={product.id} className={styles.productCard}> {/* Define styles.productCard */}
-                  <Link href={`/product/${product.slug}`} className={styles.productLink}>
-                    <div className={styles.productImageContainer}>
-                      {/* Next/Image could be used here if 'next/image' import is restored and configured */}
-                      <img src={isValidImageUrl(product.image) ? product.image : DEFAULT_IMAGES.products.default} alt={product.name} className={styles.productImage}/>
-                    </div>
-                    <div className={styles.productContent}>
-                      <h3 className={styles.productName}>{product.name}</h3>
-                      <p className={styles.productShortDescription}>{product.short_description}</p>
-                      <div className={styles.productPriceContainer}>
-                        {product.sale_price && product.sale_price < product.price && (
-                          <span className={styles.productSalePrice}>${product.sale_price.toLocaleString()}/{product.price_unit}</span>
-                        )}
-                        <span className={product.sale_price && product.sale_price < product.price ? styles.productOriginalPrice : styles.productPrice}>
-                          ${product.price.toLocaleString()}/{product.price_unit}
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
       )}

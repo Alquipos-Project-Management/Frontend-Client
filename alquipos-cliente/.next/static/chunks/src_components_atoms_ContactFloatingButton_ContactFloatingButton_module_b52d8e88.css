@@ -1,0 +1,257 @@
+/* [project]/src/components/atoms/ContactFloatingButton/ContactFloatingButton.module.css [app-client] (css) */
+.ContactFloatingButton-module__O7zdoa__floatingContactContainer {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: gold;
+  border: none;
+  box-shadow: 0 4px 12px #0000004d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all .3s cubic-bezier(.25, 1, .5, 1);
+  overflow: hidden;
+  position: relative;
+  animation: 2s infinite ContactFloatingButton-module__O7zdoa__pulseAnimation;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:hover, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px #0006;
+  width: auto;
+  max-width: 220px;
+  padding-right: 20px;
+  border-radius: 30px;
+  background-color: #1a1a1a;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:hover .ContactFloatingButton-module__O7zdoa__obreroImage, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active .ContactFloatingButton-module__O7zdoa__obreroImage {
+  filter: invert(85%) sepia(34%) saturate(1000%) hue-rotate(359deg) brightness(105%);
+}
+
+.ContactFloatingButton-module__O7zdoa__constructorIcon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0;
+  flex-shrink: 0;
+  transition: margin .3s;
+}
+
+.ContactFloatingButton-module__O7zdoa__obreroImage {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: brightness(0);
+  transition: filter .3s;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:hover .ContactFloatingButton-module__O7zdoa__constructorIcon, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active .ContactFloatingButton-module__O7zdoa__constructorIcon {
+  margin-right: 8px;
+}
+
+.ContactFloatingButton-module__O7zdoa__buttonLabel {
+  max-width: 0;
+  opacity: 0;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all .3s cubic-bezier(.25, 1, .5, 1);
+  overflow: hidden;
+  margin-left: 0;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:hover .ContactFloatingButton-module__O7zdoa__buttonLabel, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active .ContactFloatingButton-module__O7zdoa__buttonLabel {
+  max-width: 200px;
+  opacity: 1;
+  margin-left: 0;
+  color: gold;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:before, .ContactFloatingButton-module__O7zdoa__mainButton:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: gold;
+  opacity: .8;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:before {
+  animation: 2s ease-out infinite ContactFloatingButton-module__O7zdoa__ripple;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:after {
+  animation: 2s ease-out 1s infinite ContactFloatingButton-module__O7zdoa__ripple;
+}
+
+.ContactFloatingButton-module__O7zdoa__mainButton:hover:before, .ContactFloatingButton-module__O7zdoa__mainButton:hover:after, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active:before, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active:after {
+  animation-play-state: paused;
+  background-color: #1a1a1a;
+}
+
+@keyframes ContactFloatingButton-module__O7zdoa__ripple {
+  0% {
+    transform: scale(1);
+    opacity: .6;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes ContactFloatingButton-module__O7zdoa__pulseAnimation {
+  0% {
+    box-shadow: 0 0 #ffd700b3;
+  }
+
+  70% {
+    box-shadow: 0 0 0 15px #ffd70000;
+  }
+
+  100% {
+    box-shadow: 0 0 #ffd70000;
+  }
+}
+
+.ContactFloatingButton-module__O7zdoa__contactOptions {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all .3s;
+}
+
+.ContactFloatingButton-module__O7zdoa__contactOptions.ContactFloatingButton-module__O7zdoa__open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ContactFloatingButton-module__O7zdoa__contactOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background-color: var(--background-light);
+  border-radius: 24px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px #0003;
+  transition: all .3s;
+  border: 1px solid var(--secondary-80);
+}
+
+.ContactFloatingButton-module__O7zdoa__contactOption svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ContactFloatingButton-module__O7zdoa__contactOption span {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ContactFloatingButton-module__O7zdoa__whatsappOption {
+  color: #25d366;
+}
+
+.ContactFloatingButton-module__O7zdoa__whatsappOption:hover {
+  background-color: #25d3661a;
+  transform: translateY(-3px);
+}
+
+.ContactFloatingButton-module__O7zdoa__emailOption {
+  color: var(--primary-100);
+}
+
+.ContactFloatingButton-module__O7zdoa__emailOption:hover {
+  background-color: #ffd7001a;
+  transform: translateY(-3px);
+}
+
+@media (width <= 768px) {
+  .ContactFloatingButton-module__O7zdoa__mainButton {
+    width: 50px;
+    height: 50px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__mainButton:hover, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active {
+    width: auto;
+    padding-right: 15px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__constructorIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__buttonLabel {
+    font-size: 13px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__contactOption {
+    padding: 6px 12px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__contactOption svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__contactOption span {
+    font-size: 13px;
+  }
+}
+
+@media (width <= 480px) {
+  .ContactFloatingButton-module__O7zdoa__mainButton {
+    width: 45px;
+    height: 45px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__mainButton:hover, .ContactFloatingButton-module__O7zdoa__mainButton.ContactFloatingButton-module__O7zdoa__active {
+    width: auto;
+    padding-right: 10px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__constructorIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__contactOption {
+    padding: 5px 10px;
+  }
+
+  .ContactFloatingButton-module__O7zdoa__contactOption span {
+    font-size: 12px;
+  }
+}
+
+/*# sourceMappingURL=src_components_atoms_ContactFloatingButton_ContactFloatingButton_module_b52d8e88.css.map*/

@@ -1,0 +1,225 @@
+/* [project]/src/components/molecules/Carousel/HeroCarousel.module.css [app-client] (css) */
+.HeroCarousel-module__921Ggq__carouselContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 500px;
+  overflow: hidden;
+  margin-top: -72px;
+}
+
+.HeroCarousel-module__921Ggq__slidesContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.HeroCarousel-module__921Ggq__slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform .5s ease-in-out, opacity .5s ease-in-out;
+  overflow: hidden;
+}
+
+.HeroCarousel-module__921Ggq__slideImageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.HeroCarousel-module__921Ggq__slideImage {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.05);
+  transition: transform 8s ease-out;
+}
+
+.HeroCarousel-module__921Ggq__activeSlide .HeroCarousel-module__921Ggq__slideImage {
+  transform: scale(1);
+}
+
+.HeroCarousel-module__921Ggq__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #0009 0%, #0000004d 50%, #0000001a 100%);
+}
+
+.HeroCarousel-module__921Ggq__slideContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 8%;
+  color: #fff;
+  z-index: 10;
+}
+
+.HeroCarousel-module__921Ggq__slideTextContent {
+  max-width: 600px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .8s, transform .8s;
+  transition-delay: .3s;
+}
+
+.HeroCarousel-module__921Ggq__activeSlide .HeroCarousel-module__921Ggq__slideTextContent {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.HeroCarousel-module__921Ggq__slideTitle {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px #0003;
+  color: #fff;
+}
+
+.HeroCarousel-module__921Ggq__slideSubtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  max-width: 90%;
+  text-shadow: 0 1px 2px #0000004d;
+}
+
+.HeroCarousel-module__921Ggq__slideCta {
+  display: inline-block;
+  background-color: var(--primary-100);
+  color: #333;
+  font-weight: 600;
+  padding: .8rem 2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  transition: all .3s;
+  box-shadow: 0 4px 8px #0000001a;
+}
+
+.HeroCarousel-module__921Ggq__slideCta:hover {
+  background-color: var(--primary-80);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px #00000026;
+}
+
+.HeroCarousel-module__921Ggq__carouselControl {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background-color: #fff3;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all .3s;
+}
+
+.HeroCarousel-module__921Ggq__carouselControl:hover {
+  background-color: #fff6;
+  transform: translateY(-50%)scale(1.1);
+}
+
+.HeroCarousel-module__921Ggq__prevControl {
+  left: 30px;
+}
+
+.HeroCarousel-module__921Ggq__nextControl {
+  right: 30px;
+}
+
+.HeroCarousel-module__921Ggq__controlIcon {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}
+
+.HeroCarousel-module__921Ggq__indicators {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+}
+
+.HeroCarousel-module__921Ggq__indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ffffff80;
+  border: none;
+  transition: all .3s;
+  cursor: pointer;
+}
+
+.HeroCarousel-module__921Ggq__activeIndicator, .HeroCarousel-module__921Ggq__indicator:hover {
+  background-color: var(--primary-100);
+}
+
+@media (width <= 1024px) {
+  .HeroCarousel-module__921Ggq__slideTitle {
+    font-size: 2.8rem;
+  }
+}
+
+@media (width <= 768px) {
+  .HeroCarousel-module__921Ggq__carouselContainer {
+    height: 80vh;
+  }
+
+  .HeroCarousel-module__921Ggq__slideTitle {
+    font-size: 2.2rem;
+  }
+
+  .HeroCarousel-module__921Ggq__slideSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .HeroCarousel-module__921Ggq__carouselControl {
+    width: 40px;
+    height: 40px;
+  }
+
+  .HeroCarousel-module__921Ggq__prevControl {
+    left: 15px;
+  }
+
+  .HeroCarousel-module__921Ggq__nextControl {
+    right: 15px;
+  }
+}
+
+@media (width <= 480px) {
+  .HeroCarousel-module__921Ggq__slideTitle {
+    font-size: 1.8rem;
+  }
+
+  .HeroCarousel-module__921Ggq__slideSubtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .HeroCarousel-module__921Ggq__slideCta {
+    padding: .7rem 1.5rem;
+  }
+}
+
+/*# sourceMappingURL=src_components_molecules_Carousel_HeroCarousel_module_b52d8e88.css.map*/
