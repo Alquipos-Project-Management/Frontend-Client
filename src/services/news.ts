@@ -1,5 +1,8 @@
-import { supabase } from './supabase';
+'use client';
+
+import supabase from './supabase-direct';
 import { CSSProperties } from 'react';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export interface NewsItem {
   id: string;
@@ -46,53 +49,6 @@ interface NewsDetailResponse {
   data: NewsDetail;
 }
 
-// Mock news data
-const mockNewsItems: NewsItem[] = [
-  {
-    id: '1',
-    slug: 'nuevos-equipos-2023',
-    tags: ['equipos', 'nuevos', 'construcción'],
-    title: 'Nuevos equipos disponibles para 2023',
-    status: 'published',
-    summary: 'Hemos incorporado nuevos equipos a nuestra flota para satisfacer las necesidades de nuestros clientes.',
-    created_at: '2023-01-15T08:00:00.000Z',
-    is_featured: true,
-    published_at: '2023-01-15T08:00:00.000Z',
-  },
-  {
-    id: '2',
-    slug: 'promocion-alquiler-temporada',
-    tags: ['promoción', 'alquiler', 'descuento'],
-    title: 'Promoción especial para alquiler por temporada',
-    status: 'published',
-    summary: 'Aprovecha nuestras tarifas especiales para alquileres de larga duración.',
-    created_at: '2023-02-10T10:30:00.000Z',
-    is_featured: false,
-    published_at: '2023-02-10T10:30:00.000Z',
-  }
-];
-
-// Mock news detail
-const getMockNewsDetail = (id: string): NewsDetail => {
-  const baseItem = mockNewsItems.find(item => item.id === id) || mockNewsItems[0];
-  
-  return {
-    ...baseItem,
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisi vel consectetur euismod, nisi nisi consectetur nisi, euismod nisi nisi vel euismod.',
-    metadata: { views: 1250, likes: 45 },
-    author_id: 'author-1',
-    is_active: true,
-    updated_at: '2023-03-01T14:22:00.000Z',
-    content_type: 'news',
-    seo_metadata: {
-      title: baseItem.title,
-      keywords: baseItem.tags.join(', '),
-      description: baseItem.summary
-    },
-    display_order: 1
-  };
-};
-
 const handleSupabaseError = (error: any) => {
   console.error('Supabase error:', error);
   throw new Error(error.message || 'Error al conectar con el servidor');
@@ -103,45 +59,57 @@ const RETRY_DELAY = 1000; // 1 second
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const retryOperation = async <T>(
-  operation: () => Promise<T>,
-  retries = MAX_RETRIES,
-  delayMs = RETRY_DELAY
-): Promise<T> => {
-  try {
-    return await operation();
-  } catch (error) {
-    if (retries === 0) throw error;
-    await delay(delayMs);
-    return retryOperation(operation, retries - 1, delayMs * 2);
+const retryOperation = async <T>(operation: () => Promise<T>): Promise<T> => {
+  let lastError: any;
+  
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      console.warn(`Attempt ${attempt} failed, retrying...`, error);
+      lastError = error;
+      if (attempt < MAX_RETRIES) {
+        await delay(RETRY_DELAY * attempt);
+      }
+    }
   }
+  
+  throw lastError || new Error('Operation failed after multiple retries');
 };
 
 export const newsService = {
   getNewsList: async (): Promise<NewsItem[]> => {
     return retryOperation(async () => {
       try {
+        // Verificar que el cliente supabase existe
+        if (!supabase) {
+          console.error('Cliente Supabase no inicializado en servicio de noticias');
+          throw new Error('Cliente Supabase no disponible');
+        }
+        
+        console.log('Consultando lista de noticias con RPC');
         const { data, error } = await supabase.rpc('rpc_news_list');
 
         if (error) {
           console.error('Error fetching news list:', error);
-          return mockNewsItems;
+          throw error;
         }
 
         if (!data || !Array.isArray(data) || data.length === 0) {
-          return mockNewsItems;
+          console.warn('No se encontraron noticias');
+          return [];
         }
 
         const response = data[0] as NewsResponse;
         
         if (!response.success) {
           console.error('News API response unsuccessful:', response.message);
-          return mockNewsItems;
+          throw new Error(response.message);
         }
 
         const items = response.data.items || [];
         if (items.length === 0) {
-          return mockNewsItems;
+          return [];
         }
 
         // Fetch details in parallel with error handling
@@ -166,7 +134,7 @@ export const newsService = {
           .map(result => result.value);
       } catch (error) {
         console.error('Error fetching news:', error);
-        return mockNewsItems;
+        throw error;
       }
     });
   },
@@ -174,30 +142,37 @@ export const newsService = {
   getNewsDetail: async (id: string): Promise<NewsDetail> => {
     return retryOperation(async () => {
       try {
+        // Verificar que el cliente supabase existe
+        if (!supabase) {
+          console.error('Cliente Supabase no inicializado en servicio de noticias (detalle)');
+          throw new Error('Cliente Supabase no disponible');
+        }
+        
+        console.log('Consultando detalle de noticia con ID:', id);
         const { data, error } = await supabase.rpc('rpc_news_get', {
           p_id: id
         });
 
         if (error) {
           console.error('Error fetching news detail:', error);
-          return getMockNewsDetail(id);
+          throw error;
         }
 
         if (!data || !Array.isArray(data) || data.length === 0) {
-          return getMockNewsDetail(id);
+          throw new Error('No se encontró la noticia');
         }
 
         const response = data[0] as NewsDetailResponse;
         
         if (!response.success) {
           console.error('News detail API response unsuccessful:', response.message);
-          return getMockNewsDetail(id);
+          throw new Error(response.message);
         }
 
         return response.data;
       } catch (error) {
         console.error('Error fetching news detail:', error);
-        return getMockNewsDetail(id);
+        throw error;
       }
     });
   },
@@ -219,9 +194,9 @@ export const newsService = {
   },
 
   // Helper function to get image dimensions
-  getImageDimensions: (item: NewsItem): { width: number; height: number; style: CSSProperties } => {
-    const baseStyle: CSSProperties = {
-      objectFit: 'cover' as const,
+  getImageDimensions: (item: NewsItem): { width: number; height: number; style: React.CSSProperties } => {
+    const baseStyle: React.CSSProperties = {
+      objectFit: 'cover',
       objectPosition: 'center',
       width: '100%',
       height: '100%',

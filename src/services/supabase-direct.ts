@@ -1,9 +1,9 @@
 'use client';
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Acceder a las variables de entorno de forma segura
-const getEnvVariable = (key) => {
+const getEnvVariable = (key: string): string => {
   // Cliente
   if (typeof window !== 'undefined') {
     if (window.__ENV__ && window.__ENV__[key]) {
@@ -32,7 +32,7 @@ console.log('Variables de entorno disponibles:', {
 });
 
 // Crear cliente solo si hay credenciales
-let supabase = null;
+let supabase: SupabaseClient | null = null;
 
 if (supabaseUrl && supabaseKey) {
   try {
@@ -46,7 +46,7 @@ if (supabaseUrl && supabaseKey) {
 }
 
 // Función para obtener contenido dinámico
-export const getDynamicContent = async (pageKey) => {
+export const getDynamicContent = async (pageKey: string) => {
   if (!supabase) {
     console.error('Cliente Supabase no inicializado');
     throw new Error('Cliente Supabase no disponible');
@@ -65,6 +65,13 @@ export const getDynamicContent = async (pageKey) => {
   
   return data;
 };
+
+// Declare window.__ENV__ type
+declare global {
+  interface Window {
+    __ENV__?: Record<string, string>;
+  }
+}
 
 // Exportar cliente
 export default supabase; 

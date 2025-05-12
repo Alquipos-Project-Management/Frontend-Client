@@ -1,4 +1,6 @@
-import { supabase } from './supabase';
+'use client';
+
+import supabase from './supabase-direct';
 
 // Mock data for when Supabase is unavailable
 const mockEquipment = [
@@ -21,34 +23,55 @@ const mockEquipment = [
 export const equipmentService = {
   getAll: async () => {
     try {
+      console.log('Consultando lista de equipos');
+      
+      // Verificar que el cliente supabase existe
+      if (!supabase) {
+        console.error('Cliente Supabase no inicializado en servicio de equipos');
+        throw new Error('Cliente Supabase no disponible');
+      }
+      
       const { data, error } = await supabase.from('equipment').select('*');
       
       if (error) {
-        console.error('Equipment getAll error:', error);
-        return { data: mockEquipment, error: null };
+        console.error('Error al obtener equipos:', error);
+        throw error;
       }
       
-      return { data: data?.length ? data : mockEquipment, error: null };
+      return { data: data || [], error: null };
     } catch (error) {
-      console.error('Equipment getAll error:', error);
-      return { data: mockEquipment, error: null };
+      console.error('Error en servicio de equipos:', error);
+      // Propagamos el error en lugar de usar mocks
+      throw error;
     }
   },
+  
   getById: async (id: string) => {
     try {
+      console.log('Consultando equipo con ID:', id);
+      
+      // Verificar que el cliente supabase existe
+      if (!supabase) {
+        console.error('Cliente Supabase no inicializado en servicio de equipos (detalle)');
+        throw new Error('Cliente Supabase no disponible');
+      }
+      
       const { data, error } = await supabase.from('equipment').select('*').eq('id', id).single();
       
       if (error) {
-        console.error('Equipment getById error:', error);
-        const mockItem = mockEquipment.find(item => item.id === id) || mockEquipment[0];
-        return { data: mockItem, error: null };
+        console.error('Error al obtener equipo por ID:', error);
+        throw error;
+      }
+      
+      if (!data) {
+        throw new Error('Equipo no encontrado');
       }
       
       return { data, error: null };
     } catch (error) {
-      console.error('Equipment getById error:', error);
-      const mockItem = mockEquipment.find(item => item.id === id) || mockEquipment[0];
-      return { data: mockItem, error: null };
+      console.error('Error en servicio de equipo (detalle):', error);
+      // Propagamos el error en lugar de usar mocks
+      throw error;
     }
   },
 }; 

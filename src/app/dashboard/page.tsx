@@ -3,30 +3,31 @@
 import { useEffect, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { NAVIGATION } from '@/constants/routes';
-import { rentalService } from '@/services/supabase';
-
-interface Rental {
-  id: string;
-  equipment_id: string;
-  user_id: string;
-  start_date: string;
-  end_date: string;
-  status: string;
-  total_price: number;
-}
+import { rentalService, Rental } from '@/services/rental';
 
 export default function DashboardPage() {
   const { user } = useApp();
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadRentals = async () => {
       try {
-        const { data } = await rentalService.getAll();
+        setIsLoading(true);
+        console.log('Cargando alquileres desde dashboard');
+        const { data, error } = await rentalService.getAll();
+        
+        if (error) {
+          throw error;
+        }
+        
         setRentals(data || []);
-      } catch (error) {
-        console.error('Error cargando alquileres:', error);
+        setError(null);
+      } catch (err) {
+        console.error('Error cargando alquileres:', err);
+        setError('No se pudieron cargar los alquileres');
+        setRentals([]);
       } finally {
         setIsLoading(false);
       }
@@ -36,6 +37,7 @@ export default function DashboardPage() {
   }, []);
 
   if (isLoading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
@@ -65,6 +67,13 @@ export default function DashboardPage() {
         ) : (
           <div>
             <p>Tienes {rentals.length} alquileres</p>
+            <ul>
+              {rentals.map(rental => (
+                <li key={rental.id}>
+                  Alquiler ID: {rental.id} - Estado: {rental.status}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>
