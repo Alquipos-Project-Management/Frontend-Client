@@ -30,8 +30,10 @@ type PageProps = {
 };
 
 export default function CategoryPage({ params }: PageProps) {
-  const { slug } = params;
-  const category = categories.find(cat => cat.slug === slug);
+  // Ignore the actual slug from params and always use the slug of the first mock category
+  const mockSlugToDisplay = "excavadoras"; // Hardcoded slug from mock data
+  const category = categories.find(cat => cat.slug === mockSlugToDisplay);
+  // The rest of the logic remains the same, filtering products based on the hardcoded category's ID
   const categoryProducts = products.filter(product => product.category_id === category?.id);
 
   if (!category) {
