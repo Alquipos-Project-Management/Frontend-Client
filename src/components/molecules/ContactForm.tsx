@@ -6,24 +6,32 @@ import { TextArea } from '../atoms/TextArea';
 import styles from '@/app/contact/contact.module.css';
 
 interface FormData {
-  full_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   subject: string;
-  message: string;  
+  message: string;
+  dateOfBirth: string;
 }
 
 interface FormErrors {
   [key: string]: string;
 }
 
-export const ContactForm: React.FC = () => {
+interface ContactFormProps {
+  onSubmit: (formData: FormData) => Promise<void>;
+}
+
+export const ContactForm: React.FC<ContactFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<FormData>({
-    full_name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     subject: '',
-    message: ''
+    message: '',
+    dateOfBirth: ''
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -32,8 +40,12 @@ export const ContactForm: React.FC = () => {
   const validateForm = () => {
     const newErrors: FormErrors = {};
     
-    if (!formData.full_name) {
-      newErrors.full_name = 'El nombre es requerido';
+    if (!formData.firstName) {
+      newErrors.firstName = 'El nombre es requerido';
+    }
+    
+    if (!formData.lastName) {
+      newErrors.lastName = 'El apellido es requerido';
     }
     
     if (!formData.email) {
@@ -50,6 +62,10 @@ export const ContactForm: React.FC = () => {
       newErrors.message = 'El mensaje es requerido';
     }
 
+    if (!formData.dateOfBirth) {
+      newErrors.dateOfBirth = 'La fecha de nacimiento es requerida';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -60,18 +76,16 @@ export const ContactForm: React.FC = () => {
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        // TODO: Implement API call to backend
-        console.log('Form data:', formData);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
+        await onSubmit(formData);
         // Reset form after successful submission
         setFormData({
-          full_name: '',
+          firstName: '',
+          lastName: '',
           email: '',
           phone: '',
           subject: '',
-          message: ''
+          message: '',
+          dateOfBirth: ''
         });
       } catch (error) {
         console.error('Error submitting form:', error);
@@ -98,15 +112,27 @@ export const ContactForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className={`${styles.formContainer} space-y-4`}>
-      <Input
-        label="Nombre Completo"
-        name="full_name"
-        value={formData.full_name}
-        onChange={handleChange}
-        error={errors.full_name}
-        placeholder="Ingrese su nombre completo"
-        disabled={isSubmitting}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Input
+          label="Nombre"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          error={errors.firstName}
+          placeholder="Ingrese su nombre"
+          disabled={isSubmitting}
+        />
+        
+        <Input
+          label="Apellido"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          error={errors.lastName}
+          placeholder="Ingrese su apellido"
+          disabled={isSubmitting}
+        />
+      </div>
       
       <Input
         label="Correo Electrónico"
@@ -126,6 +152,16 @@ export const ContactForm: React.FC = () => {
         value={formData.phone}
         onChange={handleChange}
         placeholder="+506 8888-8888"
+        disabled={isSubmitting}
+      />
+
+      <Input
+        label="Fecha de Nacimiento"
+        name="dateOfBirth"
+        type="date"
+        value={formData.dateOfBirth}
+        onChange={handleChange}
+        error={errors.dateOfBirth}
         disabled={isSubmitting}
       />
       
@@ -156,7 +192,7 @@ export const ContactForm: React.FC = () => {
       >
         {isSubmitting ? (
           <span className="flex items-center justify-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-secondary-100" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg className={`${styles.loadingSpinner} animate-spin`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>

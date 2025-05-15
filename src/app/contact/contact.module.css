@@ -165,18 +165,19 @@
 
 .submitButton {
   width: 100%;
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-lg);
   background-color: var(--primary-100);
   color: #0A0A0A;
   border: none;
   border-radius: var(--border-radius-md);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+  height: 40px;
 }
 
 .submitButton:hover {
@@ -195,6 +196,12 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.submitButton .loadingSpinner {
+  width: 16px;
+  height: 16px;
+  margin-right: var(--space-xs);
 }
 
 .infoSection {
@@ -371,6 +378,49 @@
   from {
     opacity: 0;
     transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.formStatus {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.formStatus.error {
+  background-color: #FEE2E2;
+  border: 2px solid #EF4444;
+  color: #B91C1C;
+  font-size: 1.1rem;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.1), 0 2px 4px -1px rgba(239, 68, 68, 0.06);
+}
+
+.formStatus.success {
+  background-color: #DCFCE7;
+  border: 2px solid #22C55E;
+  color: #166534;
+}
+
+.formStatus svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
