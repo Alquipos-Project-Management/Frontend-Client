@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { categories, products } from '@/mock/products';
 import styles from './categoria.module.css';
 import imagen3 from '@/assets/images/3.jpg';
+import { productService } from '@/services/products';
+import { categoryService } from '@/services/categories';
+import { Product, Category } from '@/types/product';
 
 // Utilizar imágenes de construcción de dominio público/gratuitas
 const backgroundImages = {
@@ -13,35 +15,116 @@ const backgroundImages = {
   pattern: "https://www.transparenttextures.com/patterns/concrete-wall.png"
 };
 
-// Obtener imagen de la categoría
-const getCategoryImage = (category: any) => {
-  // Usar la imagen 3.jpg para todas las categorías
-  return imagen3.src;
-};
-
-// Actualizar productos con imágenes de construcción si no tienen imágenes
-const getProductImage = (product: any) => {
-  // Forzar el uso de imagen3 para todos los productos
+// Obtener imagen del producto
+const getProductImage = (product: Product) => {
+  // Forzar el uso de imagen3 para todos los productos por ahora
   return imagen3.src;
 };
 
 type PageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export default function CategoryPage({ params }: PageProps) {
-  // Ignore the actual slug from params and always use the slug of the first mock category
-  const mockSlugToDisplay = "excavadoras"; // Hardcoded slug from mock data
-  const category = categories.find(cat => cat.slug === mockSlugToDisplay);
-  // The rest of the logic remains the same, filtering products based on the hardcoded category's ID
-  const categoryProducts = products.filter(product => product.category_id === category?.id);
+  const resolvedParams = React.use(params);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
+  const [showFeaturedOnly, setShowFeaturedOnly] = useState(true);
 
-  if (!category) {
+  useEffect(() => {
+    const fetchCategoryAndProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // First, fetch the category data
+        const categoryResponse = await categoryService.getCategoryBySlug(resolvedParams.slug);
+        
+        if (!categoryResponse.success || !categoryResponse.data) {
+          setError('Categoría no encontrada');
+          return;
+        }
+
+        const categoryData = categoryResponse.data;
+        setCategory(categoryData);
+
+        console.log('Fetching products with params:', {
+          category_id_param: categoryData.id,
+          is_featured_param: showFeaturedOnly,
+          limit_param: 10,
+          offset_param: 0
+        });
+
+        const productsResponse = await productService.getProducts({
+          category_id_param: categoryData.id,
+          is_featured_param: showFeaturedOnly,
+          limit_param: 10,
+          offset_param: 0
+        });
+
+        console.log('API Response:', {
+          success: productsResponse.success,
+          message: productsResponse.message,
+          data: {
+            limit: productsResponse.data.limit,
+            offset: productsResponse.data.offset,
+            total_count: productsResponse.data.total_count,
+            products_count: productsResponse.data.products.length,
+            products: productsResponse.data.products
+          }
+        });
+
+        if (!productsResponse.success) {
+          setError(productsResponse.message || 'Error al cargar los productos');
+          return;
+        }
+
+        if (productsResponse.data.products.length === 0) {
+          setError(showFeaturedOnly 
+            ? 'No hay productos destacados disponibles en esta categoría.' 
+            : 'Actualmente esta categoría no tiene productos disponibles.');
+          return;
+        }
+
+        setProducts(productsResponse.data.products);
+      } catch (err: any) {
+        console.error('Error fetching data:', err);
+        console.error('Error details:', {
+          message: err.message,
+          stack: err.stack,
+          response: err.response
+        });
+        setError(err.message || 'Error al cargar los datos. Por favor, intente más tarde.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategoryAndProducts();
+  }, [resolvedParams.slug, showFeaturedOnly]);
+
+  const toggleFeatured = () => {
+    setShowFeaturedOnly(!showFeaturedOnly);
+  };
+
+  if (loading) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.loadingContainer}>
+          <p>Cargando productos...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
     return (
       <main className={styles.main}>
         <div className={styles.errorContainer}>
-          <h1>Categoría no encontrada</h1>
-          <p>La categoría que busca no existe.</p>
+          <h1>Información</h1>
+          <p>{error}</p>
           <Link href="/productos" className={styles.backButton}>
             Volver a Productos
           </Link>
@@ -58,19 +141,15 @@ export default function CategoryPage({ params }: PageProps) {
         backgroundPosition: 'center'
       }}>
         <div className={styles.heroContent}>
-          <h1>{category.name}</h1>
-          <p>{category.description}</p>
+          <h1>{category?.name}</h1>
+          <p>{category?.description || 'Descubre nuestra selección de productos en esta categoría'}</p>
         </div>
       </div>
 
-      <section className={styles.productsSection}>
-        <div className={styles.productsHeader}>
-          <h2>Productos disponibles</h2>
-          <p>{categoryProducts.length} productos encontrados</p>
-        </div>
+      <section id="productsSection" className={styles.productsSection}>
 
         <div className={styles.productsGrid}>
-          {categoryProducts.map((product) => (
+          {products.map((product) => (
             <Link 
               href={`/productos/detalle/${product.slug}`}
               key={product.id}
@@ -83,7 +162,13 @@ export default function CategoryPage({ params }: PageProps) {
                   width={400}
                   height={300}
                   className={styles.productImage}
+                  style={{ width: 'auto', height: 'auto' }}
                 />
+                {product.is_featured && (
+                  <div className={styles.featuredBadge}>
+                    Destacado
+                  </div>
+                )}
               </div>
               <div className={styles.productContent}>
                 <h3 className={styles.productTitle}>{product.name}</h3>
@@ -113,29 +198,7 @@ export default function CategoryPage({ params }: PageProps) {
       >
         <h2>Otras categorías que podrían interesarte</h2>
         <div className={styles.relatedCategories}>
-          {categories
-            .filter(cat => cat.id !== category.id)
-            .slice(0, 2)
-            .map(cat => (
-              <Link 
-                href={`/productos/categoria/${cat.slug}`}
-                key={cat.id}
-                className={styles.relatedCategoryCard}
-              >
-                <div className={styles.relatedCategoryImageContainer}>
-                  <Image 
-                    src={getCategoryImage(cat)}
-                    alt={cat.name}
-                    width={300}
-                    height={200}
-                    className={styles.relatedCategoryImage}
-                  />
-                </div>
-                <div className={styles.relatedCategoryContent}>
-                  <h3>{cat.name}</h3>
-                </div>
-              </Link>
-            ))}
+          {/* We'll implement related categories later */}
         </div>
       </section>
     </main>

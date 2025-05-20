@@ -181,11 +181,6 @@ export default function ProductosPage() {
       >
         <h2>Productos Destacados</h2>
         <p>Nuestros equipos más solicitados con disponibilidad inmediata</p>
-        <div className={styles.callToAction}>
-          <Link href="/productos/todos" className={styles.primaryButton}>
-            Ver todos los productos
-          </Link>
-        </div>
       </section>
 
       <section id="infoSection" className={`${styles.infoSection} ${visibleSections.info ? styles.visible : ''}`}>

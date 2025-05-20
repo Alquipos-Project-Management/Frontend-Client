@@ -3,50 +3,60 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { products, categories } from '@/mock/products';
+import { productService } from '@/services/products';
+import { Product } from '@/types/product';
 import styles from './detalle.module.css';
-import imagen3 from '@/assets/images/3.jpg';
 import imagen4 from '@/assets/images/4.jpg';
-import imagen5 from '@/assets/images/5.jpg';
-import imagen6 from '@/assets/images/6.jpg';
-import imagen7 from '@/assets/images/7.jpg';
 
-// Utilizar imágenes de construcción de dominio público/gratuitas
-const backgroundImages = {
+// Default images for products
+const defaultImages = {
   hero: "https://images.unsplash.com/photo-1621110628647-b4a64cb6df5e?q=80&w=1920&auto=format&fit=crop",
-  pattern: "https://www.transparenttextures.com/patterns/concrete-wall.png"
-};
-
-// Actualizar productos con imágenes de construcción si no tienen imágenes
-const getProductImage = (product: any) => {
-  if (product.images && product.images.length > 0 && product.images[0].url) {
-    return product.images[0].url;
-  }
-  
-  // Usar solo imagen4 para todos los productos
-  return imagen4.src;
+  pattern: "https://www.transparenttextures.com/patterns/concrete-wall.png",
+  placeholder: imagen4.src
 };
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const { slug } = params;
-  const product = products.find(prod => prod.slug === slug);
-  const category = product ? categories.find(cat => cat.id === product.category_id) : null;
-  
+  const resolvedParams = React.use(params);
+  const { slug } = resolvedParams;
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFeaturesVisible, setIsFeaturesVisible] = useState(false);
-  const [isRelatedVisible, setIsRelatedVisible] = useState(false);
 
-  // Detectar scroll para animar secciones
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const response = await productService.getProductBySlug(slug);
+        
+        if (!response.success) {
+          setError(response.message);
+          return;
+        }
+
+        setProduct(response.data);
+      } catch (err: any) {
+        console.error('Error fetching product:', err);
+        setError(err.message || 'Error loading product');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [slug]);
+
+  // Scroll animation effect
   useEffect(() => {
     const handleScroll = () => {
       const featuresSection = document.querySelector('#featuresSection');
-      const relatedSection = document.querySelector('#relatedSection');
       
       if (featuresSection) {
         const featuresSectionPosition = featuresSection.getBoundingClientRect().top;
@@ -54,37 +64,32 @@ export default function ProductPage({ params }: ProductPageProps) {
           setIsFeaturesVisible(true);
         }
       }
-      
-      if (relatedSection) {
-        const relatedSectionPosition = relatedSection.getBoundingClientRect().top;
-        if (relatedSectionPosition < window.innerHeight * 0.75 && !isRelatedVisible) {
-          setIsRelatedVisible(true);
-        }
-      }
     };
 
     window.addEventListener('scroll', handleScroll);
-    // Ejecutar una vez para comprobar si alguna sección ya es visible sin scroll
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isFeaturesVisible, isRelatedVisible]);
+  }, [isFeaturesVisible]);
 
-  // Buscar productos relacionados (misma categoría)
-  const relatedProducts = product 
-    ? products
-        .filter(item => item.category_id === product.category_id && item.id !== product.id)
-        .slice(0, 3) 
-    : [];
+  if (loading) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.loadingContainer}>
+          <p>Cargando detalles del producto...</p>
+        </div>
+      </main>
+    );
+  }
 
-  if (!product) {
+  if (error || !product) {
     return (
       <main className={styles.main}>
         <div className={styles.errorContainer}>
-          <h1>Producto no encontrado</h1>
-          <p>El producto que busca no existe o ha sido removido.</p>
+          <h1>Producto No Encontrado</h1>
+          <p>{error || 'El producto que busca no existe o ha sido removido.'}</p>
           <Link href="/productos" className={styles.backButton}>
             Volver a Productos
           </Link>
@@ -93,15 +98,53 @@ export default function ProductPage({ params }: ProductPageProps) {
     );
   }
 
-  // Organizar imágenes del producto o usar imágenes por defecto
-  let productImages = [];
-  // Usar siempre imagen4 para garantizar que se vean las imágenes
-  productImages = [imagen4.src, imagen4.src, imagen4.src];
+  // Use placeholder image if no product image is available
+  const productImages = product.images && product.images.length > 0
+    ? product.images.map(img => img.url)
+    : [defaultImages.placeholder];
+
+  // Format metadata keys for display
+  const formatMetadataKey = (key: string) => {
+    const keyMap: { [key: string]: string } = {
+      material: 'Material',
+      capacidad: 'Capacidad de Carga',
+      altura_max: 'Altura Máxima',
+      certificacion: 'Certificación',
+      sku: 'Código',
+      name: 'Nombre',
+      description: 'Descripción',
+      short_description: 'Descripción Corta',
+      is_available: 'Disponibilidad',
+      is_rental: 'Tipo de Producto',
+      is_featured: 'Destacado',
+      category_name: 'Categoría',
+      tags: 'Etiquetas'
+    };
+    return keyMap[key] || key;
+  };
+
+  // Format field values for display
+  const formatFieldValue = (key: string, value: any) => {
+    if (value === null || value === undefined) return 'No disponible';
+    
+    switch (key) {
+      case 'is_available':
+        return value ? 'Disponible' : 'No disponible';
+      case 'is_rental':
+        return value ? 'Alquiler' : 'Venta';
+      case 'is_featured':
+        return value ? 'Sí' : 'No';
+      case 'tags':
+        return Array.isArray(value) ? value.join(', ') : value;
+      default:
+        return value.toString();
+    }
+  };
 
   return (
     <main className={styles.main}>
       <div className={styles.breadcrumbs} style={{
-        backgroundImage: `linear-gradient(rgba(17, 17, 17, 0.9), rgba(17, 17, 17, 0.9)), url(${backgroundImages.pattern})`,
+        backgroundImage: `linear-gradient(rgba(17, 17, 17, 0.9), rgba(17, 17, 17, 0.9)), url(${defaultImages.pattern})`,
         backgroundSize: 'auto',
         backgroundRepeat: 'repeat'
       }}>
@@ -109,10 +152,10 @@ export default function ProductPage({ params }: ProductPageProps) {
           <Link href="/">Inicio</Link>
           <span>/</span>
           <Link href="/productos">Productos</Link>
-          {category && (
+          {product.category && (
             <>
               <span>/</span>
-              <Link href={`/productos/categoria/${category.slug}`}>{category.name}</Link>
+              <Link href={`/productos/categoria/${product.category.slug}`}>{product.category.name}</Link>
             </>
           )}
           <span>/</span>
@@ -121,132 +164,145 @@ export default function ProductPage({ params }: ProductPageProps) {
       </div>
 
       <section className={styles.productSection}>
-        <div className={styles.productContainer}>
-          <div className={styles.productGallery}>
-            <div className={styles.mainImageContainer}>
-              <Image 
-                src={productImages[selectedImage]}
-                alt={product.name}
-                width={800}
-                height={600}
-                className={styles.mainImage}
-                priority={true}
-              />
+        <div className={styles.productGalleryWithTitle}>
+          <div className={styles.mainImageContainer}>
+            <Image 
+              src={productImages[selectedImage]}
+              alt={product.name}
+              width={800}
+              height={600}
+              className={styles.mainImage}
+              priority={true}
+            />
+            <div className={styles.imageTitleOverlay}>
+              <h1 className={styles.productTitle}>{product.name}</h1>
             </div>
-            {productImages.length > 1 && (
-              <div className={styles.thumbnailsContainer}>
-                {productImages.map((image, index) => (
-                  <div 
-                    key={index}
-                    className={`${styles.thumbnail} ${selectedImage === index ? styles.activeThumbnail : ''}`}
-                    onClick={() => setSelectedImage(index)}
-                  >
-                    <Image 
-                      src={image}
-                      alt={`${product.name} - imagen ${index + 1}`}
-                      width={100}
-                      height={75}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
+          {productImages.length > 1 && (
+            <div className={styles.thumbnailsContainer}>
+              {productImages.map((image, index) => (
+                <div 
+                  key={index}
+                  className={`${styles.thumbnail} ${selectedImage === index ? styles.activeThumbnail : ''}`}
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <Image 
+                    src={image}
+                    alt={`${product.name} - imagen ${index + 1}`}
+                    width={100}
+                    height={75}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-          <div className={styles.productInfo}>
-            <h1 className={styles.productTitle}>{product.name}</h1>
-            
-            {category && (
-              <div className={styles.productCategory}>
-                <Link href={`/productos/categoria/${category.slug}`}>
-                  {category.name}
-                </Link>
+        <div className={styles.productInfo}>
+          <div className={styles.productDetails}>
+            {/* Basic Information Section */}
+            <div className={styles.detailsSection}>
+              <h3 className={styles.sectionTitle}>Información Básica</h3>
+              <div className={styles.detailsGrid}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>Código</span>
+                  <span className={styles.detailValue}>{product.sku}</span>
+                </div>
+
+                {product.category && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>Categoría</span>
+                    <span className={styles.detailValue}>
+                      <Link href={`/productos/categoria/${product.category.slug}`}>
+                        {product.category.name}
+                      </Link>
+                    </span>
+                  </div>
+                )}
+
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>Tipo</span>
+                  <span className={styles.detailValue}>
+                    {product.is_rental ? 'Alquiler' : 'Venta'}
+                  </span>
+                </div>
+
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>Estado</span>
+                  <span className={`${styles.detailValue} ${styles.availabilityBadge} ${product.is_available ? styles.available : styles.unavailable}`}>
+                    {product.is_available ? 'Disponible' : 'No disponible'}
+                  </span>
+                </div>
               </div>
-            )}
-            
-            <div className={styles.productShortDescription}>
-              <p>{product.description}</p>
             </div>
-            
-            <div className={styles.productAvailability}>
-              <h3>Disponibilidad</h3>
-              <span className={`${styles.availabilityBadge} ${product.is_available ? styles.available : styles.unavailable}`}>
-                {product.is_available ? 'Disponible para alquiler' : 'No disponible temporalmente'}
-              </span>
-            </div>
-            
+
+            {/* Action Button */}
             <div className={styles.productActions}>
               <button className={styles.primaryButton}>
                 Solicitar Cotización
               </button>
-              <button className={styles.secondaryButton}>
-                Consultar Disponibilidad
-              </button>
             </div>
           </div>
         </div>
-      </section>
 
-      <section id="featuresSection" className={`${styles.featuresSection} ${isFeaturesVisible ? styles.visible : ''}`}>
-        <div className={styles.featuresContainer}>
-          <h2>Características y Especificaciones</h2>
-          
-          <div className={styles.featuresGrid}>
-            {product.attributes && Object.entries(product.attributes).map(([key, value]) => (
-              <div key={key} className={styles.featureItem}>
-                <span className={styles.featureLabel}>{key}</span>
-                <span className={styles.featureValue}>{value}</span>
-              </div>
-            ))}
-          </div>
-          
-          <div className={styles.additionalInfo}>
-            <h3>Detalles adicionales</h3>
-            <p>
-              {product.description || 'Para obtener información más detallada sobre este equipo, por favor contáctenos y estaremos encantados de responder todas sus consultas y proporcionar especificaciones técnicas completas.'}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {relatedProducts.length > 0 && (
-        <section id="relatedSection" className={`${styles.relatedSection} ${isRelatedVisible ? styles.visible : ''}`}
-          style={{
-            backgroundImage: `linear-gradient(rgba(17, 17, 17, 0.9), rgba(17, 17, 17, 0.9)), url(${backgroundImages.pattern})`,
-            backgroundSize: 'auto',
-            backgroundRepeat: 'repeat'
-          }}
-        >
-          <div className={styles.relatedContainer}>
-            <h2>Productos Relacionados</h2>
+        {/* Features Section */}
+        <section id="featuresSection" className={`${styles.featuresSection} ${isFeaturesVisible ? styles.visible : ''}`}>
+          <div className={styles.featuresContainer}>
+            <h2>Características y Especificaciones</h2>
             
-            <div className={styles.relatedGrid}>
-              {relatedProducts.map((related) => (
-                <Link 
-                  href={`/productos/detalle/${related.slug}`}
-                  key={related.id}
-                  className={styles.relatedCard}
-                >
-                  <div className={styles.relatedImageContainer}>
-                    <Image 
-                      src={imagen4.src}
-                      alt={related.name}
-                      width={400}
-                      height={300}
-                      className={styles.relatedImage}
-                      priority
-                    />
-                  </div>
-                  <div className={styles.relatedInfo}>
-                    <h3>{related.name}</h3>
-                    <p>{related.short_description}</p>
-                  </div>
-                </Link>
+            <div className={styles.featuresGrid}>
+              {product.metadata && Object.entries(product.metadata).map(([key, value]) => (
+                <div key={key} className={styles.featureItem}>
+                  <span className={styles.featureLabel}>{formatMetadataKey(key)}</span>
+                  <span className={styles.featureValue}>{formatFieldValue(key, value)}</span>
+                </div>
+              ))}
+              {product.attributes && Object.entries(product.attributes).map(([key, value]) => (
+                <div key={key} className={styles.featureItem}>
+                  <span className={styles.featureLabel}>{formatMetadataKey(key)}</span>
+                  <span className={styles.featureValue}>{formatFieldValue(key, value)}</span>
+                </div>
               ))}
             </div>
+
+            {/* Description Section */}
+            <div className={styles.descriptionSection}>
+              <h3 className={styles.sectionTitle}>Descripción</h3>
+              <div className={styles.descriptionContent}>
+                {product.short_description && (
+                  <div className={styles.shortDescription}>
+                    <p>{product.short_description}</p>
+                  </div>
+                )}
+                <div className={styles.fullDescription}>
+                  <p>{product.description}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Tags Section */}
+            {product.tags && product.tags.length > 0 && (
+              <div className={styles.tagsSection}>
+                <h3 className={styles.sectionTitle}>Etiquetas</h3>
+                <div className={styles.tagsContainer}>
+                  {product.tags.map((tag, index) => (
+                    <span key={index} className={styles.tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {product.exta_information && (
+              <div className={styles.additionalInfo}>
+                <h3>Información Adicional</h3>
+                <p>{typeof product.exta_information === 'string' ? product.exta_information : JSON.stringify(product.exta_information)}</p>
+              </div>
+            )}
           </div>
         </section>
-      )}
+      </section>
     </main>
   );
 } 
